@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
 
     this.adsRemoved = application.getSharedPreferences().getBoolean(REMOVE_ADS_SKU, false);
 
-    adView = findViewById(R.id.adView);
+    /*adView = findViewById(R.id.adView); //Kai: keine Werbung
     if (this.adsRemoved) {
       RelativeLayout parent = (RelativeLayout) adView.getParent();
       if (parent != null) {
@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
       AdRequest adRequest =
           new AdRequest.Builder().addTestDevice("86193DC9EBC8E1C3873178900C9FCCFC").build();
       adView.loadAd(adRequest);
-    }
+    }*/
   }
 
   @Override

@@ -2,6 +2,7 @@ package com.peterjosling.scroball;
 
 import android.media.MediaMetadata;
 import android.media.session.PlaybackState;
+import android.util.Log;
 
 import com.peterjosling.scroball.transforms.MetadataTransformers;
 
@@ -39,7 +40,9 @@ public class PlaybackTracker {
         metadataTransformers.transformForPackageName(player, Track.fromMediaMetadata(metadata));
 
     if (!track.isValid()) {
-      return;
+      Log.v("IMP", "Oh no!");
+      //handleSessionTermination(player); //Kai
+      //return;     //im Prinzip einzige Änderung: Das return hier entfernen. Wenn Track nicht valid ist, soll er trotzdem übernommen werden, sonst bleibt alter Track bestehen und wird mehrfach gescrobbelt.
     }
 
     PlayerState playerState = getOrCreatePlayerState(player);

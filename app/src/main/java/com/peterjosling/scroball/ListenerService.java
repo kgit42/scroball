@@ -126,6 +126,7 @@ public class ListenerService extends NotificationListenerService
 
             @Override
             public void onMetadataChanged(MediaMetadata metadata) {
+              Log.v("IMP", metadata.getDescription().toString());
               controllerMetadataChanged(controller, metadata);
             }
           };
