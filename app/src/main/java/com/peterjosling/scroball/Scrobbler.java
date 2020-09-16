@@ -16,7 +16,7 @@ import java.util.List;
 public class Scrobbler {
 
   private static final String TAG = Scrobbler.class.getName();
-  private static final int SCROBBLE_THRESHOLD = 4 * 60 * 1000;
+  private static final int SCROBBLE_THRESHOLD = 1 * 60 * 1000;    //Kai: initially 4 * 60 * 1000 = 4 minutes
   private static final int MINIMUM_SCROBBLE_TIME = 30 * 1000;
   private static final int MAX_SCROBBLES = 50;
 
@@ -31,6 +31,8 @@ public class Scrobbler {
   private boolean isScrobbling = false;
   private long lastScrobbleTime = 0;
   private long nextScrobbleDelay = 0;
+
+  private PlaybackItem lastPlaybackItem = null; //Kai
 
   public Scrobbler(
       LastfmClient client,
@@ -76,6 +78,19 @@ public class Scrobbler {
   }
 
   public void submit(PlaybackItem playbackItem) {
+    //Log.v("WICHTIG", "submit function: " + playbackItem.toString());
+    //Log.v("WICHTIG", "lastplaybackitem: " + lastPlaybackItem);
+    if(lastPlaybackItem != null) {
+      Log.v("Wichtig", "Comparing... " + lastPlaybackItem.getTrack().track().equals(playbackItem.getTrack().track()) + lastPlaybackItem.getTrack().artist().equals(playbackItem.getTrack().artist()));
+    }
+
+    if(lastPlaybackItem != null) {            //Kai: gegen Dopplungen: Methode kann nur 1x aufgerufen werden
+      if(lastPlaybackItem.getTrack().track().equals(playbackItem.getTrack().track()) && lastPlaybackItem.getTrack().artist().equals(playbackItem.getTrack().artist())) {
+        return;
+      }
+    }
+
+
     // Set final value for amount played, in case it was playing up until now.
     playbackItem.updateAmountPlayed();
 
@@ -112,6 +127,22 @@ public class Scrobbler {
     }
 
     int newScrobbles = playCount - playbackItem.getPlaysScrobbled();
+
+
+    if(newScrobbles != 0) { //Kai: Nur 1 neuer Scrobble erlaubt
+      newScrobbles = 1;
+    }
+
+    if(playCount != 0) { //Kai: Nur 1 neuer Scrobble erlaubt
+      playCount = 1;
+    }
+
+
+
+Log.v("Wichtig", "newScrobbles: " + newScrobbles);  //Kai
+    Log.v("Wichtig", "playCount: " + playCount);
+    Log.v("Wichtig", "playbackItem.getPlaysScrobbled(): " + playbackItem.getPlaysScrobbled());
+
     for (int i = playbackItem.getPlaysScrobbled(); i < playCount; i++) {
       int itemTimestamp = (int) ((timestamp + i * duration) / 1000);
 
@@ -128,9 +159,13 @@ public class Scrobbler {
 
     notificationManager.notifyScrobbled(track, newScrobbles);
     scrobblePending();
+
+    lastPlaybackItem = playbackItem; //Kai: speichern des letzten Items gegen Dopplungen
   }
 
   public void fetchTrackDurationAndSubmit(final PlaybackItem playbackItem) {
+    Log.v("WICHTIG", "Playback Item: " + playbackItem.toString()); //Kai
+
     NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
     boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
 
@@ -201,6 +236,7 @@ public class Scrobbler {
     }
 
     for (PlaybackItem playbackItem : playbackItems) {
+
       fetchTrackDurationAndSubmit(playbackItem);
     }
 

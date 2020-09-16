@@ -1,5 +1,7 @@
 package com.peterjosling.scroball.db;
 
+import android.util.Log;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.eventbus.EventBus;
 import com.peterjosling.scroball.LastfmClient;
@@ -25,6 +27,8 @@ public class ScroballDB {
 
   private EventBus eventBus = ScroballApplication.getEventBus();
 
+  private Scrobble lastScrobble = null; //Kai
+
   /** Returns a list of all pending and submitted {@link Scrobble}s. */
   public List<Scrobble> readScrobbles() {
     List<ScrobbleLogEntry> entries =
@@ -40,6 +44,18 @@ public class ScroballDB {
    * will be updated.
    */
   public void writeScrobble(Scrobble scrobble) {
+    Log.v("WICHTIG", "writeScrobble: " + scrobble.track().track() + " von " + scrobble.track().artist() + " (" + scrobble.timestamp() + ")"); //Kai
+
+    /*Log.v("Wichtig", "Comparing... " + lastScrobble + scrobble);
+    if(lastScrobble != null){   //Kai
+      if(lastScrobble.equals(scrobble)) {
+        Log.v("WICHTIG", "!!!");
+        return;
+      }
+    }*/
+
+
+
     Track track = scrobble.track();
     ScrobbleStatus status = scrobble.status();
     ScrobbleLogEntry logEntry = new ScrobbleLogEntry();
@@ -62,6 +78,8 @@ public class ScroballDB {
     scrobble.status().setDbId(logEntry.id);
 
     eventBus.post(ScroballDBUpdateEvent.create(scrobble));
+
+    lastScrobble = scrobble; //Kai
   }
 
   /**
@@ -93,6 +111,7 @@ public class ScroballDB {
    * will be updated.
    */
   public void writePendingPlaybackItem(PlaybackItem playbackItem) {
+    Log.v("WICHTIG", "writePendingPlaybackItem: " + playbackItem.getTrack().track() + " von " + playbackItem.getTrack().artist() + " (" + playbackItem.getTimestamp() + ")");  //Kai
     Track track = playbackItem.getTrack();
     PendingPlaybackItemEntry entry = new PendingPlaybackItemEntry();
     entry.timestamp = playbackItem.getTimestamp();

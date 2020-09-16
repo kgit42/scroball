@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">Scroball modified by Kai</string>
+    <string name="app_name" translatable="false">Scroball modified by Kai for Radio (no equal scrobbles in a row)</string>
 
     <!-- Strings related to Settings -->
     <string name="saved_session_key" translatable="false">sessionKey</string>
