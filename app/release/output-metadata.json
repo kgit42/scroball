@@ -4,7 +4,7 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.peterjosling.scroball",
+  "applicationId": "com.appmut.scroball",
   "variantName": "release",
   "elements": [
     {

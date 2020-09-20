@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.peterjosling.scroball"
+<manifest package="com.appmut.scroball"
           xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -7,7 +7,7 @@
     <uses-permission android:name="com.android.vending.BILLING"/>
 
     <application
-        android:name=".ScroballApplication"
+        android:name="com.appmut.scroball.ScroballApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ui.SplashScreen"
+            android:name="com.appmut.scroball.ui.SplashScreen"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -25,16 +25,16 @@
         </activity>
 
         <service
-            android:name=".ListenerService"
+            android:name="com.appmut.scroball.ListenerService"
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
             <intent-filter>
                 <action android:name="android.service.notification.NotificationListenerService"/>
             </intent-filter>
         </service>
-        <service android:name=".LoveTrackService"/>
+        <service android:name="com.appmut.scroball.LoveTrackService"/>
 
         <activity
-            android:name=".ui.LoginActivity"
+            android:name="com.appmut.scroball.ui.LoginActivity"
             android:label="@string/title_activity_login">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -44,14 +44,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.MainActivity"
+            android:name="com.appmut.scroball.ui.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
-            android:name=".ui.SettingsActivity"
+            android:name="com.appmut.scroball.ui.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".ui.MainActivity">
+            android:parentActivityName="com.appmut.scroball.ui.MainActivity">
         </activity>
 
         <meta-data

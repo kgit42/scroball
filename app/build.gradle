@@ -19,7 +19,7 @@ android {
     compileSdkVersion 29
 
     defaultConfig {
-        applicationId 'com.peterjosling.scroball'
+        applicationId 'com.appmut.scroball'
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         minSdkVersion 21
         targetSdkVersion 29

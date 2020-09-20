@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AndroidConfiguredLogFilters">
+    <filters>
+      <filter>
+        <option name="logLevel" value="verbose" />
+        <option name="logMessagePattern" value="" />
+        <option name="logTagPattern" value="" />
+        <option name="name" value="scroball" />
+        <option name="packageNamePattern" value="com.appmut.scroball" />
+        <option name="pid" value="" />
+      </filter>
+    </filters>
+  </component>
+  <component name="AndroidLayouts">
+    <shared>
+      <config />
+    </shared>
+  </component>
+  <component name="AndroidLogFilters">
+    <option name="TOOL_WINDOW_CUSTOM_FILTER" value="wicht" />
+    <option name="TOOL_WINDOW_LOG_LEVEL" value="verbose" />
+    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="scroball" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="3f4f8882-0a2c-4ef5-9307-0c8fde5954f2" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/release/app-release.apk" beforeDir="false" afterPath="$PROJECT_DIR$/app/release/app-release.apk" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/release/output-metadata.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/release/output-metadata.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/peterjosling/scroball/AuthErrorEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/appmut/scroball/AuthErrorEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/peterjosling/scroball/AuthRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/appmut/scroball/AuthRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/peterjosling/scroball/AuthResult.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/appmut/scroball/AuthResult.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/peterjosling/scroball/LastfmApi.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/appmut/scroball/LastfmApi.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/peterjosling/scroball/LastfmClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/appmut/scroball/LastfmClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/peterjosling/scroball/ListenerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/appmut/scroball/ListenerService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/peterjosling/scroball/LoveTrackService.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/appmut/scroball/LoveTrackService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/peterjosling/scroball/NetworkStateReceiver.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/appmut/scroball/NetworkStateReceiver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/peterjosling/scroball/NowPlayingChangeEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/appmut/scroball/NowPlayingChangeEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/peterjosling/scroball/PlaybackItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/appmut/scroball/PlaybackItem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/peterjosling/scroball/PlaybackTracker.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/appmut/scroball/PlaybackTracker.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/peterjosling/scroball/PlayerState.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/appmut/scroball/PlayerState.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/peterjosling/scroball/ScroballApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/appmut/scroball/ScroballApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/peterjosling/scroball/Scrobble.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/appmut/scroball/Scrobble.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/peterjosling/scroball/ScrobbleNotificationManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/appmut/scroball/ScrobbleNotificationManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/peterjosling/scroball/ScrobbleStatus.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/appmut/scroball/ScrobbleStatus.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/peterjosling/scroball/Scrobbler.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/appmut/scroball/Scrobbler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/peterjosling/scroball/Track.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/appmut/scroball/Track.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/peterjosling/scroball/TrackLoveEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/appmut/scroball/TrackLoveEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/peterjosling/scroball/TrackLovedEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/appmut/scroball/TrackLovedEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/peterjosling/scroball/TrackLover.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/appmut/scroball/TrackLover.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/peterjosling/scroball/db/LovedTracksEntry.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/appmut/scroball/db/LovedTracksEntry.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/peterjosling/scroball/db/PendingPlaybackItemEntry.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/appmut/scroball/db/PendingPlaybackItemEntry.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/peterjosling/scroball/db/ScroballDB.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/appmut/scroball/db/ScroballDB.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/peterjosling/scroball/db/ScroballDBUpdateEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/appmut/scroball/db/ScroballDBUpdateEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/peterjosling/scroball/db/ScrobbleLogEntry.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/appmut/scroball/db/ScrobbleLogEntry.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/peterjosling/scroball/transforms/MetadataTransform.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/appmut/scroball/transforms/MetadataTransform.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/peterjosling/scroball/transforms/MetadataTransformers.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/appmut/scroball/transforms/MetadataTransformers.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/peterjosling/scroball/transforms/PandoraOfflineArtistCleaner.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/appmut/scroball/transforms/PandoraOfflineArtistCleaner.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/peterjosling/scroball/transforms/SonosRoomCleaner.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/appmut/scroball/transforms/SonosRoomCleaner.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/peterjosling/scroball/transforms/TitleExtractor.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/appmut/scroball/transforms/TitleExtractor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/peterjosling/scroball/transforms/VideoTitleCleaner.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/appmut/scroball/transforms/VideoTitleCleaner.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/peterjosling/scroball/ui/AppCompatPreferenceActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/appmut/scroball/ui/AppCompatPreferenceActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/peterjosling/scroball/ui/LoginActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/appmut/scroball/ui/LoginActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/peterjosling/scroball/ui/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/appmut/scroball/ui/MainActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/peterjosling/scroball/ui/NowPlayingFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/appmut/scroball/ui/NowPlayingFragment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/peterjosling/scroball/ui/ScrobbleHistoryFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/appmut/scroball/ui/ScrobbleHistoryFragment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/peterjosling/scroball/ui/ScrobbleHistoryItemAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/appmut/scroball/ui/ScrobbleHistoryItemAdapter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/peterjosling/scroball/ui/SettingsActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/appmut/scroball/ui/SettingsActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/peterjosling/scroball/ui/SplashScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/appmut/scroball/ui/SplashScreen.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_login.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_login.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_splash_screen.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_splash_screen.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_scrobble_history.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_scrobble_history.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/xml/pref_headers.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/xml/pref_headers.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/test/java/com/peterjosling/scroball/LastfmClientTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/test/java/com/appmut/scroball/LastfmClientTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/test/java/com/peterjosling/scroball/PlaybackItemTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/test/java/com/appmut/scroball/PlaybackItemTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/test/java/com/peterjosling/scroball/ScrobblerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/test/java/com/appmut/scroball/ScrobblerTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/test/java/com/peterjosling/scroball/TrackLoverTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/test/java/com/appmut/scroball/TrackLoverTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/test/java/com/peterjosling/scroball/TrackTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/test/java/com/appmut/scroball/TrackTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/test/java/com/peterjosling/scroball/db/ScroballDBTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/test/java/com/appmut/scroball/db/ScroballDBTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/test/java/com/peterjosling/scroball/transforms/MetadataTransformersTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/test/java/com/appmut/scroball/transforms/MetadataTransformersTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/test/java/com/peterjosling/scroball/transforms/TitleExtractorTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/test/java/com/appmut/scroball/transforms/TitleExtractorTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/test/java/com/peterjosling/scroball/transforms/VideoTitleCleanerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/test/java/com/appmut/scroball/transforms/VideoTitleCleanerTest.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="Pixel_3_XL_API_23" />
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <projects_view />
+      </state>
+    </system>
+  </component>
+  <component name="GenerateSignedApkSettings">
+    <option name="KEY_STORE_PATH" value="C:\Users\kmutt\OneDrive\Studium\Programmierung verteilter und mobiler Anwendungen\Android keystore\scroball.jks" />
+    <option name="KEY_ALIAS" value="key0" />
+    <option name="REMEMBER_PASSWORDS" value="true" />
+    <option name="BUILD_TARGET_KEY" value="apk" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="1hXsgHpId4OB0DWxZQAzmnOkJJY" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ApkExportedModule" value="app" />
+    <property name="ExportApk.ApkPath" value="C:\Users\kmutt\GitHub\scroball\app" />
+    <property name="ExportApk.BuildVariants" value="release" />
+    <property name="ExportApk.SignV2" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="last_opened_file_path" value="$USER_HOME$/OneDrive/Studium/Programmierung verteilter und mobiler Anwendungen/Praktikum/2.1/Einkaufsliste" />
+    <property name="settings.editor.selected.configurable" value="Console" />
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="AndroidJUnit" factoryName="Android JUnit">
+      <option name="TEST_OBJECT" value="class" />
+      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
+      <method v="2">
+        <option name="Android.Gradle.BeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="app" type="AndroidRunConfigurationType" factoryName="Android App" activateToolWindowBeforeRun="false">
+      <module name="app" />
+      <option name="DEPLOY" value="true" />
+      <option name="DEPLOY_APK_FROM_BUNDLE" value="false" />
+      <option name="DEPLOY_AS_INSTANT" value="false" />
+      <option name="ARTIFACT_NAME" value="" />
+      <option name="PM_INSTALL_OPTIONS" value="" />
+      <option name="DYNAMIC_FEATURES_DISABLED_LIST" value="" />
+      <option name="ACTIVITY_EXTRA_FLAGS" value="" />
+      <option name="MODE" value="default_activity" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="false" />
+      <option name="SKIP_NOOP_APK_INSTALLATIONS" value="true" />
+      <option name="FORCE_STOP_RUNNING_APP" value="true" />
+      <option name="TARGET_SELECTION_MODE" value="DEVICE_AND_SNAPSHOT_COMBO_BOX" />
+      <option name="SELECTED_CLOUD_MATRIX_CONFIGURATION_ID" value="-1" />
+      <option name="SELECTED_CLOUD_MATRIX_PROJECT_ID" value="" />
+      <option name="DEBUGGER_TYPE" value="Auto" />
+      <Auto>
+        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+        <option name="SHOW_STATIC_VARS" value="true" />
+        <option name="WORKING_DIR" value="" />
+        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+      </Auto>
+      <Hybrid>
+        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+        <option name="SHOW_STATIC_VARS" value="true" />
+        <option name="WORKING_DIR" value="" />
+        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+      </Hybrid>
+      <Java />
+      <Native>
+        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+        <option name="SHOW_STATIC_VARS" value="true" />
+        <option name="WORKING_DIR" value="" />
+        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+      </Native>
+      <Profilers>
+        <option name="ADVANCED_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_CPU_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_CPU_PROFILING_CONFIGURATION_NAME" value="Sample Java Methods" />
+      </Profilers>
+      <option name="DEEP_LINK" value="" />
+      <option name="ACTIVITY_CLASS" value="" />
+      <method v="2">
+        <option name="Android.Gradle.BeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="3f4f8882-0a2c-4ef5-9307-0c8fde5954f2" name="Default Changelist" comment="" />
+      <created>1600168880273</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1600168880273</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="683" y="271" key="FileChooserDialogImpl" timestamp="1600534395482">
+      <screen x="0" y="0" width="1707" height="920" />
+    </state>
+    <state x="683" y="271" key="FileChooserDialogImpl/0.0.1707.920@0.0.1707.920" timestamp="1600534395482" />
+    <state x="878" y="352" key="FileChooserDialogImpl/0.0.2194.1194@0.0.2194.1194" timestamp="1600417462961" />
+    <state width="831" height="242" key="GridCell.Tab.0.bottom" timestamp="1600525086058">
+      <screen x="0" y="0" width="1707" height="920" />
+    </state>
+    <state width="831" height="242" key="GridCell.Tab.0.bottom/0.0.1707.920@0.0.1707.920" timestamp="1600525086058" />
+    <state width="1075" height="409" key="GridCell.Tab.0.bottom/0.0.2194.1194@0.0.2194.1194" timestamp="1600448865001" />
+    <state width="831" height="242" key="GridCell.Tab.0.center" timestamp="1600525086058">
+      <screen x="0" y="0" width="1707" height="920" />
+    </state>
+    <state width="831" height="242" key="GridCell.Tab.0.center/0.0.1707.920@0.0.1707.920" timestamp="1600525086058" />
+    <state width="1075" height="409" key="GridCell.Tab.0.center/0.0.2194.1194@0.0.2194.1194" timestamp="1600448865001" />
+    <state width="831" height="242" key="GridCell.Tab.0.left" timestamp="1600525086058">
+      <screen x="0" y="0" width="1707" height="920" />
+    </state>
+    <state width="831" height="242" key="GridCell.Tab.0.left/0.0.1707.920@0.0.1707.920" timestamp="1600525086058" />
+    <state width="1075" height="409" key="GridCell.Tab.0.left/0.0.2194.1194@0.0.2194.1194" timestamp="1600448865001" />
+    <state width="831" height="242" key="GridCell.Tab.0.right" timestamp="1600525086058">
+      <screen x="0" y="0" width="1707" height="920" />
+    </state>
+    <state width="831" height="242" key="GridCell.Tab.0.right/0.0.1707.920@0.0.1707.920" timestamp="1600525086058" />
+    <state width="1075" height="409" key="GridCell.Tab.0.right/0.0.2194.1194@0.0.2194.1194" timestamp="1600448865001" />
+    <state width="1075" height="409" key="GridCell.Tab.1.bottom" timestamp="1600438540616">
+      <screen x="0" y="0" width="2194" height="1194" />
+    </state>
+    <state width="1075" height="409" key="GridCell.Tab.1.bottom/0.0.2194.1194@0.0.2194.1194" timestamp="1600438540616" />
+    <state width="1075" height="409" key="GridCell.Tab.1.center" timestamp="1600438540616">
+      <screen x="0" y="0" width="2194" height="1194" />
+    </state>
+    <state width="1075" height="409" key="GridCell.Tab.1.center/0.0.2194.1194@0.0.2194.1194" timestamp="1600438540616" />
+    <state width="1075" height="409" key="GridCell.Tab.1.left" timestamp="1600438540616">
+      <screen x="0" y="0" width="2194" height="1194" />
+    </state>
+    <state width="1075" height="409" key="GridCell.Tab.1.left/0.0.2194.1194@0.0.2194.1194" timestamp="1600438540616" />
+    <state width="1075" height="409" key="GridCell.Tab.1.right" timestamp="1600438540616">
+      <screen x="0" y="0" width="2194" height="1194" />
+    </state>
+    <state width="1075" height="409" key="GridCell.Tab.1.right/0.0.2194.1194@0.0.2194.1194" timestamp="1600438540616" />
+    <state x="606" y="240" key="SettingsEditor" timestamp="1600441547025">
+      <screen x="0" y="0" width="2194" height="1194" />
+    </state>
+    <state x="606" y="240" key="SettingsEditor/0.0.2194.1194@0.0.2194.1194" timestamp="1600441547025" />
+    <state x="866" y="441" key="edit.logcat.filter.dialog.dimensions" timestamp="1600444506028">
+      <screen x="0" y="0" width="2194" height="1194" />
+    </state>
+    <state x="866" y="441" key="edit.logcat.filter.dialog.dimensions/0.0.2194.1194@0.0.2194.1194" timestamp="1600444506028" />
+    <state x="791" y="329" width="697" height="536" key="find.popup" timestamp="1600447839814">
+      <screen x="0" y="0" width="2194" height="1194" />
+    </state>
+    <state x="615" y="254" width="724" height="536" key="find.popup/0.0.1707.920@0.0.1707.920" timestamp="1600362348007" />
+    <state x="791" y="329" width="697" height="536" key="find.popup/0.0.2194.1194@0.0.2194.1194" timestamp="1600447839814" />
+    <state x="760" y="264" width="672" height="678" key="search.everywhere.popup" timestamp="1600271199415">
+      <screen x="0" y="0" width="2194" height="1194" />
+    </state>
+    <state x="591" y="203" width="672" height="523" key="search.everywhere.popup/0.0.1707.920@0.0.1707.920" timestamp="1600197354128" />
+    <state x="760" y="264" width="672" height="678" key="search.everywhere.popup/0.0.2194.1194@0.0.2194.1194" timestamp="1600271199415" />
+  </component>
+</project>
