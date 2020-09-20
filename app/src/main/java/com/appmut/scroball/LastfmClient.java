@@ -139,7 +139,8 @@ public class LastfmClient {
    *     list of {@link Result} as the message payload.
    */
   public void scrobbleTracks(List<Scrobble> scrobbles, Handler.Callback callback) {
-    int numberOfFakeSuccess = 0;
+    //int numberOfFakeSuccess = 0;
+    ArrayList<String> doubleScrobblesChecker = new ArrayList<String>(); //Kai: diese Liste prüft, ob die Scrobbles, die der Methode hier als param übergeben werden, gleiche enthalten
 
     Preconditions.checkArgument(
         scrobbles.size() <= 50, "Cannot submit more than 50 scrobbles at once");
@@ -147,26 +148,28 @@ public class LastfmClient {
 
     for (int i = 0; i < scrobbles.size(); i++) {
       Scrobble scrobble = scrobbles.get(i);
+      String trackAndArtist = scrobble.track().track() + scrobble.track().artist();
 
-      Log.v("WICHTIG!", scrobble.track().track() + scrobble.track().artist());  //Kai
+      Log.v("WICHTIG!", trackAndArtist);  //Kai
       Log.v("WICHTIG!", "---Vergleich Start: (" + lastScrobbledTracks.size() + ")");
       for(int j = 0; j < lastScrobbledTracks.size(); j++){
         Log.v("WICHTIG!", "aktuelles j: " + j + " von: " + lastScrobbledTracks.size());
-        Log.v("WICHTIG!", lastScrobbledTracks.get(j) + " AND " + scrobble.track().track() + scrobble.track().artist() + " are the same?" + lastScrobbledTracks.get(j).equals(scrobble.track().track() + scrobble.track().artist()));
+        Log.v("WICHTIG!", lastScrobbledTracks.get(j) + " AND " + trackAndArtist + " are the same?" + lastScrobbledTracks.get(j).equals(trackAndArtist));
       }
       Log.v("WICHTIG!", "---Vergleich Ende: ");
 
-      if(lastScrobbledTracks.contains(scrobble.track().track() + scrobble.track().artist())){   //Kai: Wenn das Element schon mal in den letzten 4 Scrobbles vorkam, wird ein "Fake Success Code" im AsyncTask (s. u.) erzeugt
+      if(lastScrobbledTracks.contains(trackAndArtist) || doubleScrobblesChecker.contains(trackAndArtist)){   //Kai: Wenn das Element schon mal in den letzten 4 Scrobbles vorkam, wird ein "Fake Success Code" im AsyncTask (s. u.) erzeugt
         //numberOfFakeSuccess++;
         scrobbleData[i] = new ScrobbleData();    //nein, stattdessen einfach ein leeres ScrobbleData, sonst NullPointerE
       }else{
+        doubleScrobblesChecker.add(trackAndArtist); //Kai
         scrobbleData[i] = getScrobbleData(scrobble.track(), scrobble.timestamp());
       }
 
 
     }
 
-    new ScrobbleTracksTask(api, session, callback, numberOfFakeSuccess).execute(scrobbleData);
+    new ScrobbleTracksTask(api, session, callback, 0).execute(scrobbleData);
   }
 
   public static String getLastScrobbledTracks(){ //Kai
