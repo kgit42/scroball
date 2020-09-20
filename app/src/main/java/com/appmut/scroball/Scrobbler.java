@@ -16,8 +16,8 @@ import java.util.List;
 public class Scrobbler {
 
   private static final String TAG = Scrobbler.class.getName();
-  private static final int SCROBBLE_THRESHOLD = 1 * 60 * 1000;    //Kai: initially 4 * 60 * 1000 = 4 minutes
-  private static final int MINIMUM_SCROBBLE_TIME = 30 * 1000;
+  private static final int SCROBBLE_THRESHOLD = 1 * 20 * 1000;    //Kai: initially 4 * 60 * 1000 = 4 minutes
+  private static final int MINIMUM_SCROBBLE_TIME = 15 * 1000;     //Kai: initially 30 * 1000 = 30 seconds
   private static final int MAX_SCROBBLES = 50;
 
   private final LastfmClient client;
