@@ -43,12 +43,12 @@ public class LastfmClient {
    * The set of error codes which indicate transient errors, for which requests should be retried.
    */
   public static final ImmutableSet<Integer> TRANSIENT_ERROR_CODES =
-      ImmutableSet.of(
-          ERROR_NO_ERROR,
-          ERROR_UNKNOWN,
-          ERROR_OPERATION_FAILED,
-          ERROR_SERVICE_OFFLINE,
-          ERROR_SERVICE_TEMPORARILY_UNAVAILABLE);
+          ImmutableSet.of(
+                  ERROR_NO_ERROR,
+                  ERROR_UNKNOWN,
+                  ERROR_OPERATION_FAILED,
+                  ERROR_SERVICE_OFFLINE,
+                  ERROR_SERVICE_TEMPORARILY_UNAVAILABLE);
 
   private static final String TAG = LastfmClient.class.getName();
   private static final String API_KEY = "17f6f4f55152871370780cd9c0761509";
@@ -62,8 +62,12 @@ public class LastfmClient {
   public static ArrayList<String> lastScrobbledTracks = new ArrayList<String>(); //Kai
   private static final int MAX_LAST_SCROBBLED_SIZE = 3; //Kai
   //public static int numberOfFakeSuccess = 0; //Kai
+  public static boolean isScrobbleTaskBlocked = false; //Kai
+  public static int myThreadCounter = 0;  //Kai
 
-  /** Creates a new authenticated client. */
+  /**
+   * Creates a new authenticated client.
+   */
   public LastfmClient(LastfmApi api, Caller caller, String userAgent, String sessionKey) {
     this(api, caller, userAgent);
     setSession(sessionKey);
@@ -90,19 +94,21 @@ public class LastfmClient {
     return session != null;
   }
 
-  /** Returns the URL to redirect users to for browser-based authentication. */
+  /**
+   * Returns the URL to redirect users to for browser-based authentication.
+   */
   public Uri getAuthUrl() {
     return Uri.parse(
-        "http://www.last.fm/api/auth/?api_key=" + API_KEY + "&cb=scroball://authenticate");
+            "http://www.last.fm/api/auth/?api_key=" + API_KEY + "&cb=scroball://authenticate");
   }
 
   /**
    * Authenticates with the Last.fm API using the browser-based token authentication, setting up an
    * active session on this client.
    *
-   * @param token token received from the Last.fm API through a redirect.
+   * @param token    token received from the Last.fm API through a redirect.
    * @param callback callback which will be called with an {@link AuthResult} as the message
-   *     payload.
+   *                 payload.
    */
   public void getSession(String token, Handler.Callback callback) {
     new GetSessionTask(
@@ -116,15 +122,15 @@ public class LastfmClient {
               callback.handleMessage(message);
               return true;
             })
-        .execute(token);
+            .execute(token);
   }
 
   /**
    * Updates the user's Now Playing status on the Last.fm API.
    *
-   * @param track the track to take metadata from. Only track and artist will be used.
+   * @param track    the track to take metadata from. Only track and artist will be used.
    * @param callback the callback which will be invoked with the request result, with a {@link
-   *     Result} as the message payload.
+   *                 Result} as the message payload.
    */
   public void updateNowPlaying(com.appmut.scroball.Track track, Handler.Callback callback) {
     int now = (int) System.currentTimeMillis() / 1000;
@@ -135,15 +141,15 @@ public class LastfmClient {
    * Submits the specified scrobbles to the Last.fm API for the current user.
    *
    * @param scrobbles the list of scrobbles to submit. Must be 50 or fewer items.
-   * @param callback the callback which will be invoked with the results of the submissions, with a
-   *     list of {@link Result} as the message payload.
+   * @param callback  the callback which will be invoked with the results of the submissions, with a
+   *                  list of {@link Result} as the message payload.
    */
   public void scrobbleTracks(List<Scrobble> scrobbles, Handler.Callback callback) {
     //int numberOfFakeSuccess = 0;
     ArrayList<String> doubleScrobblesChecker = new ArrayList<String>(); //Kai: diese Liste prüft, ob die Scrobbles, die der Methode hier als param übergeben werden, gleiche enthalten
 
     Preconditions.checkArgument(
-        scrobbles.size() <= 50, "Cannot submit more than 50 scrobbles at once");
+            scrobbles.size() <= 50, "Cannot submit more than 50 scrobbles at once");
     final ScrobbleData[] scrobbleData = new ScrobbleData[scrobbles.size()];
 
     for (int i = 0; i < scrobbles.size(); i++) {
@@ -152,25 +158,42 @@ public class LastfmClient {
 
       Log.v("WICHTIG!", trackAndArtist);  //Kai
       Log.v("WICHTIG!", "---Vergleich Start: (" + lastScrobbledTracks.size() + ")");
-      for(int j = 0; j < lastScrobbledTracks.size(); j++){
+      for (int j = 0; j < lastScrobbledTracks.size(); j++) {
         Log.v("WICHTIG!", "aktuelles j: " + j + " von: " + lastScrobbledTracks.size());
         Log.v("WICHTIG!", lastScrobbledTracks.get(j) + " AND " + trackAndArtist + " are the same?" + lastScrobbledTracks.get(j).equals(trackAndArtist));
       }
       Log.v("WICHTIG!", "---Vergleich Ende: ");
 
-      if(lastScrobbledTracks.contains(trackAndArtist) || doubleScrobblesChecker.contains(trackAndArtist)){   //Kai: Wenn das Element schon mal in den letzten 4 Scrobbles vorkam, wird ein "Fake Success Code" im AsyncTask (s. u.) erzeugt
+      if (lastScrobbledTracks.contains(trackAndArtist) || doubleScrobblesChecker.contains(trackAndArtist)) {   //Kai: Wenn das Element schon mal in den letzten 4 Scrobbles vorkam, wird ein "Fake Success Code" im AsyncTask (s. u.) erzeugt
         //numberOfFakeSuccess++;
         scrobbleData[i] = new ScrobbleData();    //nein, stattdessen einfach ein leeres ScrobbleData, sonst NullPointerE
-      }else{
+      } else {
         doubleScrobblesChecker.add(trackAndArtist); //Kai
         scrobbleData[i] = getScrobbleData(scrobble.track(), scrobble.timestamp());
       }
 
-
     }
 
-    new ScrobbleTracksTask(api, session, callback, 0).execute(scrobbleData);
+    if (!isScrobbleTaskBlocked) { //Kai
+      new ScrobbleTracksTask(api, session, callback, 0).execute(scrobbleData);    //das war als einziges von diesem Absatz schon bei initialem Scroball da
+    } else {  //Kai: alles hier drunter. Ganz selten gab es vermutlich ein Double Scrobble dadurch, dass der Scrobble Async Task so schnell hintereinander 2x parallel ausgeführt wurde, dass ArrayList noch nicht aktuell war. Hiermit wird das vermieden
+      Thread myThread = new Thread() {
+        public void run() {
+          while (isScrobbleTaskBlocked) {
+            try { Thread.currentThread().sleep(5000); } catch (Exception e) {}
+            myThreadCounter++;
+            if (!isScrobbleTaskBlocked) {
+              new ScrobbleTracksTask(api, session, callback, 0).execute(scrobbleData);
+              return;
+            }
+          }
+        }
+      };
+      myThread.start();
+    }
+
   }
+
 
   public static String getLastScrobbledTracks(){ //Kai
     String s = new String();
@@ -348,6 +371,12 @@ public class LastfmClient {
     }
 
     @Override
+    protected void onPreExecute(){  //Kai
+      isScrobbleTaskBlocked = true;
+    }
+
+
+    @Override
     protected List<Result> doInBackground(ScrobbleData... params) {
       if(params != null){
         try {
@@ -409,6 +438,7 @@ public class LastfmClient {
       message.obj = results;
       callback.handleMessage(message);
       Log.d(TAG, String.format("Scrobbles submitted: %s", Arrays.toString(results.toArray())));
+      isScrobbleTaskBlocked = false;  //Kai
     }
   }
 

@@ -212,6 +212,9 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
     public void updateLogButton(View view) {  //Kai
       TextView textview = (TextView) findViewById(R.id.logBox);
       textview.setText(LastfmClient.getLastScrobbledTracks());
+
+      TextView textview2 = (TextView) findViewById(R.id.counterBox);
+      textview2.setText(Integer.toString(LastfmClient.myThreadCounter));
       //Toast.makeText(getApplicationContext(), Integer.toString(LastfmClient.getLastScrobbledTracks().length()), Toast.LENGTH_LONG).show();
     }
 
