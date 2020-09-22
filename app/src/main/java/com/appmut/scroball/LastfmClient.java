@@ -62,8 +62,8 @@ public class LastfmClient {
   public static ArrayList<String> lastScrobbledTracks = new ArrayList<String>(); //Kai
   private static final int MAX_LAST_SCROBBLED_SIZE = 3; //Kai
   //public static int numberOfFakeSuccess = 0; //Kai
-  public static boolean isScrobbleTaskBlocked = false; //Kai
-  public static int myThreadCounter = 0;  //Kai
+  //public static boolean isScrobbleTaskBlocked = false; //Kai
+  //public static int myThreadCounter = 0;  //Kai
 
   /**
    * Creates a new authenticated client.
@@ -148,6 +148,8 @@ public class LastfmClient {
     //int numberOfFakeSuccess = 0;
     ArrayList<String> doubleScrobblesChecker = new ArrayList<String>(); //Kai: diese Liste prüft, ob die Scrobbles, die der Methode hier als param übergeben werden, gleiche enthalten
 
+
+
     Preconditions.checkArgument(
             scrobbles.size() <= 50, "Cannot submit more than 50 scrobbles at once");
     final ScrobbleData[] scrobbleData = new ScrobbleData[scrobbles.size()];
@@ -174,16 +176,27 @@ public class LastfmClient {
 
     }
 
-    if (!isScrobbleTaskBlocked) { //Kai
-      new ScrobbleTracksTask(api, session, callback, 0).execute(scrobbleData);    //das war als einziges von diesem Absatz schon bei initialem Scroball da
-    } else {  //Kai: alles hier drunter. Ganz selten gab es vermutlich ein Double Scrobble dadurch, dass der Scrobble Async Task so schnell hintereinander 2x parallel ausgeführt wurde, dass ArrayList noch nicht aktuell war. Hiermit wird das vermieden
+    List<Result> results = scrobbleTracksTask(api, session, callback, 0, scrobbleData); //Kai: statt AsyncTask normale Methode
+
+    Message message = Message.obtain();
+    message.obj = results;
+    callback.handleMessage(message);
+    Log.d(TAG, String.format("Scrobbles submitted: %s", Arrays.toString(results.toArray())));
+    //isScrobbleTaskBlocked = false;  //Kai
+
+    /*
+    if (!isScrobbleTaskBlocked) { //Kai */  //bringt an dieser Stelle absolut nichts: denn nach sleep(500) wird doch trotzdem ohne zu Prüfen ob doppelt gescrobbelt?!
+      //new ScrobbleTracksTask(api, session, callback, 0).execute(scrobbleData);    //das war als einziges von diesem Absatz schon bei initialem Scroball da
+  /*  } else {  //Kai: alles hier drunter. Ganz selten gab es vermutlich ein Double Scrobble dadurch, dass der Scrobble Async Task so schnell hintereinander 2x parallel ausgeführt wurde, dass ArrayList noch nicht aktuell war. Hiermit wird das vermieden
       Thread myThread = new Thread() {
         public void run() {
-          while (isScrobbleTaskBlocked) {
-            try { Thread.currentThread().sleep(5000); } catch (Exception e) {}
+          Log.v("WICHTIG!", "Thread Start");
+          while (isScrobbleTaskBlocked) {   //Achtung: hier müsste true hin (siehe unten)
+            try { Thread.currentThread().sleep(500); } catch (Exception e) {}
             myThreadCounter++;
-            if (!isScrobbleTaskBlocked) {
+            if (!isScrobbleTaskBlocked) {     //Achtung: kann passieren, dass in einem Moment isScrobbleTask Blocked noch true ist, dann aber nicht mehr, wenn while condition gecheckt wird.
               new ScrobbleTracksTask(api, session, callback, 0).execute(scrobbleData);
+              Log.v("WICHTIG!", "Thread Ende");
               return;
             }
           }
@@ -191,7 +204,7 @@ public class LastfmClient {
       };
       myThread.start();
     }
-
+*/
   }
 
 
@@ -357,6 +370,61 @@ public class LastfmClient {
     }
   }
 
+  private static List<Result> scrobbleTracksTask(LastfmApi api, Session session, Handler.Callback callback, int numberOfFakeSuccess, ScrobbleData... params){  //Kai: AsyncTask zu synchroner normaler Methode gemacht.
+    if(params != null){
+      try {
+
+        List<ScrobbleResult> results = api.scrobble(ImmutableList.copyOf(params), session);
+        ImmutableList.Builder<Result> builder = ImmutableList.builder();
+
+        for (ScrobbleResult result : results) {
+          if (result.isSuccessful()) {
+            String trackAndArtist = result.getTrack() + result.getArtist(); //Kai
+            if(!trackAndArtist.equals("nullnull") && !lastScrobbledTracks.contains(trackAndArtist)){  //Kai
+              lastScrobbledTracks.add(result.getTrack() + result.getArtist());  //Kai
+            }
+            if(lastScrobbledTracks.size() > MAX_LAST_SCROBBLED_SIZE){ //Kai
+              lastScrobbledTracks.remove(0);
+            }
+            Log.v("WICHTIG!", result.getTrack() + result.getArtist());
+
+            builder.add(Result.success());
+
+          } else {
+            int errorCode = result.getErrorCode();
+            builder.add(Result.error(errorCode >= 0 ? errorCode : ERROR_UNKNOWN));
+          }
+        }
+          /*
+          for(int i = 0; i < numberOfFakeSuccess; i++){   //Kai
+            builder.add(Result.success());
+          }
+*/
+        return builder.build();
+      } catch (CallException e) {
+        Log.d(TAG, "Failed to submit scrobbles", e);
+      }
+
+      ImmutableList.Builder<Result> results = ImmutableList.builder();
+      for (ScrobbleData p : params) {
+        results.add(Result.error(ERROR_UNKNOWN));
+      }
+      return results.build();
+    }else{
+      ImmutableList.Builder<Result> builder = ImmutableList.builder();
+
+        /*
+        for(int i = 0; i < numberOfFakeSuccess; i++){   //Kai
+          builder.add(Result.success());
+        }
+        */
+
+
+      return builder.build();
+    }
+
+  }
+
   private static class ScrobbleTracksTask extends AsyncTask<ScrobbleData, Object, List<Result>> {
     private final LastfmApi api;
     private final Session session;
@@ -370,11 +438,13 @@ public class LastfmClient {
       this.numberOfFakeSuccess = numberOfFakeSuccess; //Kai
     }
 
+    /*
     @Override
     protected void onPreExecute(){  //Kai
       isScrobbleTaskBlocked = true;
+      //Log.v("WICHTIG!", "onPreExecute");
     }
-
+*/
 
     @Override
     protected List<Result> doInBackground(ScrobbleData... params) {
@@ -438,7 +508,8 @@ public class LastfmClient {
       message.obj = results;
       callback.handleMessage(message);
       Log.d(TAG, String.format("Scrobbles submitted: %s", Arrays.toString(results.toArray())));
-      isScrobbleTaskBlocked = false;  //Kai
+      //isScrobbleTaskBlocked = false;  //Kai
+      Log.v("WICHTIG!", "onPostExecute");
     }
   }
 

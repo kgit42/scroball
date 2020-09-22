@@ -55,12 +55,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:text=" Log \n Log2 \n Log3" />
-            <TextView
-                android:id="@+id/counterBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text=" -1" />
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
