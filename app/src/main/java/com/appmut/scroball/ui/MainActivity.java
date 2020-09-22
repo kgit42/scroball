@@ -213,8 +213,8 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
       TextView textview = (TextView) findViewById(R.id.logBox);
       textview.setText(LastfmClient.getLastScrobbledTracks());
 
-      //TextView textview2 = (TextView) findViewById(R.id.counterBox);
-      //textview2.setText(Integer.toString(LastfmClient.myThreadCounter) + " / " + Boolean.toString(LastfmClient.isScrobbleTaskBlocked));
+      TextView textview2 = (TextView) findViewById(R.id.counterBox);
+      textview2.setText(Integer.toString(LastfmClient.myThreadCounter) + " / " + Boolean.toString(LastfmClient.isScrobbleTaskBlocked));
       //Toast.makeText(getApplicationContext(), Integer.toString(LastfmClient.getLastScrobbledTracks().length()), Toast.LENGTH_LONG).show();
     }
 

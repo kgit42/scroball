@@ -262,58 +262,129 @@ Log.v("Wichtig", "newScrobbles: " + newScrobbles);  //Kai
     }
 */
 
-    client.scrobbleTracks(
-        tracksToScrobble,
-        message -> {
-          List<LastfmClient.Result> results = (List<LastfmClient.Result>) message.obj;
-          boolean shouldBackoff = false;
+    if(!LastfmClient.isScrobbleTaskBlocked){
+      client.scrobbleTracks(
+              tracksToScrobble,
+              message -> {
+                List<LastfmClient.Result> results = (List<LastfmClient.Result>) message.obj;
+                boolean shouldBackoff = false;
 
-          for (int i = 0; i < results.size(); i++) {
-            LastfmClient.Result result = results.get(i);
-            Scrobble scrobble = tracksToScrobble.get(i);
+                for (int i = 0; i < results.size(); i++) {
+                  LastfmClient.Result result = results.get(i);
+                  Scrobble scrobble = tracksToScrobble.get(i);
 
-            if (result.isSuccessful()) {
+                  if (result.isSuccessful()) {
 
 
-              scrobble.status().setScrobbled(true);
-              scroballDB.writeScrobble(scrobble);
-              pending.remove(scrobble);
+                    scrobble.status().setScrobbled(true);
+                    scroballDB.writeScrobble(scrobble);
+                    pending.remove(scrobble);
 
-            } else {
-              int errorCode = result.errorCode();
-              if (!LastfmClient.isTransientError(errorCode)) {
-                pending.remove(scrobble);
-                shouldBackoff = true;
-              }
-              if (LastfmClient.isAuthenticationError(errorCode)) {
-                notificationManager.notifyAuthError();
-                ScroballApplication.getEventBus().post(AuthErrorEvent.create(errorCode));
-              }
-              scrobble.status().setErrorCode(errorCode);
-              scroballDB.writeScrobble(scrobble);
+                  } else {
+                    int errorCode = result.errorCode();
+                    if (!LastfmClient.isTransientError(errorCode)) {
+                      pending.remove(scrobble);
+                      shouldBackoff = true;
+                    }
+                    if (LastfmClient.isAuthenticationError(errorCode)) {
+                      notificationManager.notifyAuthError();
+                      ScroballApplication.getEventBus().post(AuthErrorEvent.create(errorCode));
+                    }
+                    scrobble.status().setErrorCode(errorCode);
+                    scroballDB.writeScrobble(scrobble);
+                  }
+                }
+
+                isScrobbling = false;
+                lastScrobbleTime = System.currentTimeMillis();
+
+                //lastPlaybackItem2 = playbackItem; //Kai: speichern des letzten Items gegen Dopplungen
+
+                if (shouldBackoff) {
+                  // Back off starting at 1 second, up to an hour max.
+                  if (nextScrobbleDelay == 0) {
+                    nextScrobbleDelay = 1000;
+                  } else if (nextScrobbleDelay < 60 * 60 * 1000) {
+                    nextScrobbleDelay *= 4;
+                  }
+                } else {
+                  nextScrobbleDelay = 0;
+
+                  // There may be more tracks waiting to scrobble. Keep going.
+                  scrobblePending();
+                }
+                return false;
+              });
+    }else{
+      Thread myThread = new Thread() {
+        public void run() {
+          Log.v("WICHTIG!", "Thread Start");
+          while (true) {
+            try { Thread.currentThread().sleep(500); } catch (Exception e) {}
+            LastfmClient.myThreadCounter++;
+            if (!LastfmClient.isScrobbleTaskBlocked) {
+              client.scrobbleTracks(
+                      tracksToScrobble,
+                      message -> {
+                        List<LastfmClient.Result> results = (List<LastfmClient.Result>) message.obj;
+                        boolean shouldBackoff = false;
+
+                        for (int i = 0; i < results.size(); i++) {
+                          LastfmClient.Result result = results.get(i);
+                          Scrobble scrobble = tracksToScrobble.get(i);
+
+                          if (result.isSuccessful()) {
+
+
+                            scrobble.status().setScrobbled(true);
+                            scroballDB.writeScrobble(scrobble);
+                            pending.remove(scrobble);
+
+                          } else {
+                            int errorCode = result.errorCode();
+                            if (!LastfmClient.isTransientError(errorCode)) {
+                              pending.remove(scrobble);
+                              shouldBackoff = true;
+                            }
+                            if (LastfmClient.isAuthenticationError(errorCode)) {
+                              notificationManager.notifyAuthError();
+                              ScroballApplication.getEventBus().post(AuthErrorEvent.create(errorCode));
+                            }
+                            scrobble.status().setErrorCode(errorCode);
+                            scroballDB.writeScrobble(scrobble);
+                          }
+                        }
+
+                        isScrobbling = false;
+                        lastScrobbleTime = System.currentTimeMillis();
+
+                        //lastPlaybackItem2 = playbackItem; //Kai: speichern des letzten Items gegen Dopplungen
+
+                        if (shouldBackoff) {
+                          // Back off starting at 1 second, up to an hour max.
+                          if (nextScrobbleDelay == 0) {
+                            nextScrobbleDelay = 1000;
+                          } else if (nextScrobbleDelay < 60 * 60 * 1000) {
+                            nextScrobbleDelay *= 4;
+                          }
+                        } else {
+                          nextScrobbleDelay = 0;
+
+                          // There may be more tracks waiting to scrobble. Keep going.
+                          scrobblePending();
+                        }
+                        return false;
+                      });
+              Log.v("WICHTIG!", "Thread Ende");
+              return;
             }
           }
+        }
+      };
+      myThread.start();
+    }
 
-          isScrobbling = false;
-          lastScrobbleTime = System.currentTimeMillis();
 
-          //lastPlaybackItem2 = playbackItem; //Kai: speichern des letzten Items gegen Dopplungen
-
-          if (shouldBackoff) {
-            // Back off starting at 1 second, up to an hour max.
-            if (nextScrobbleDelay == 0) {
-              nextScrobbleDelay = 1000;
-            } else if (nextScrobbleDelay < 60 * 60 * 1000) {
-              nextScrobbleDelay *= 4;
-            }
-          } else {
-            nextScrobbleDelay = 0;
-
-            // There may be more tracks waiting to scrobble. Keep going.
-            scrobblePending();
-          }
-          return false;
-        });
 
 
   }

@@ -62,8 +62,8 @@ public class LastfmClient {
   public static ArrayList<String> lastScrobbledTracks = new ArrayList<String>(); //Kai
   private static final int MAX_LAST_SCROBBLED_SIZE = 3; //Kai
   //public static int numberOfFakeSuccess = 0; //Kai
-  //public static boolean isScrobbleTaskBlocked = false; //Kai
-  //public static int myThreadCounter = 0;  //Kai
+  public static boolean isScrobbleTaskBlocked = false; //Kai
+  public static int myThreadCounter = 0;  //Kai
 
   /**
    * Creates a new authenticated client.
@@ -145,6 +145,8 @@ public class LastfmClient {
    *                  list of {@link Result} as the message payload.
    */
   public void scrobbleTracks(List<Scrobble> scrobbles, Handler.Callback callback) {
+    isScrobbleTaskBlocked = true; //Kai
+
     //int numberOfFakeSuccess = 0;
     ArrayList<String> doubleScrobblesChecker = new ArrayList<String>(); //Kai: diese Liste prüft, ob die Scrobbles, die der Methode hier als param übergeben werden, gleiche enthalten
 
@@ -176,6 +178,7 @@ public class LastfmClient {
 
     }
 
+    /*
     List<Result> results = scrobbleTracksTask(api, session, callback, 0, scrobbleData); //Kai: statt AsyncTask normale Methode
 
     Message message = Message.obtain();
@@ -183,11 +186,13 @@ public class LastfmClient {
     callback.handleMessage(message);
     Log.d(TAG, String.format("Scrobbles submitted: %s", Arrays.toString(results.toArray())));
     //isScrobbleTaskBlocked = false;  //Kai
+    */
 
-    /*
-    if (!isScrobbleTaskBlocked) { //Kai */  //bringt an dieser Stelle absolut nichts: denn nach sleep(500) wird doch trotzdem ohne zu Prüfen ob doppelt gescrobbelt?!
-      //new ScrobbleTracksTask(api, session, callback, 0).execute(scrobbleData);    //das war als einziges von diesem Absatz schon bei initialem Scroball da
-  /*  } else {  //Kai: alles hier drunter. Ganz selten gab es vermutlich ein Double Scrobble dadurch, dass der Scrobble Async Task so schnell hintereinander 2x parallel ausgeführt wurde, dass ArrayList noch nicht aktuell war. Hiermit wird das vermieden
+
+
+   /* if (!isScrobbleTaskBlocked) { *///Kai  //bringt an dieser Stelle absolut nichts: denn nach sleep(500) wird doch trotzdem ohne zu Prüfen ob doppelt gescrobbelt?!
+      new ScrobbleTracksTask(api, session, callback, 0).execute(scrobbleData);    //das war als einziges von diesem Absatz schon bei initialem Scroball da
+  /* } else {  //Kai: alles hier drunter. Ganz selten gab es vermutlich ein Double Scrobble dadurch, dass der Scrobble Async Task so schnell hintereinander 2x parallel ausgeführt wurde, dass ArrayList noch nicht aktuell war. Hiermit wird das vermieden
       Thread myThread = new Thread() {
         public void run() {
           Log.v("WICHTIG!", "Thread Start");
@@ -370,6 +375,7 @@ public class LastfmClient {
     }
   }
 
+  //Kai: geht leider nicht so, da api.scrobble eine Netzwerk-Aktivität ist und diese nicht im UI Thread laufen sollten, da App sonst einfriert. --> Async Task doch nötig
   private static List<Result> scrobbleTracksTask(LastfmApi api, Session session, Handler.Callback callback, int numberOfFakeSuccess, ScrobbleData... params){  //Kai: AsyncTask zu synchroner normaler Methode gemacht.
     if(params != null){
       try {
@@ -508,7 +514,7 @@ public class LastfmClient {
       message.obj = results;
       callback.handleMessage(message);
       Log.d(TAG, String.format("Scrobbles submitted: %s", Arrays.toString(results.toArray())));
-      //isScrobbleTaskBlocked = false;  //Kai
+      isScrobbleTaskBlocked = false;  //Kai
       Log.v("WICHTIG!", "onPostExecute");
     }
   }
