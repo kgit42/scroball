@@ -16,8 +16,8 @@ import java.util.List;
 public class Scrobbler {
 
   private static final String TAG = Scrobbler.class.getName();
-  private static final int SCROBBLE_THRESHOLD = 1 * 20 * 1000;    //Kai: initially 4 * 60 * 1000 = 4 minutes
-  private static final int MINIMUM_SCROBBLE_TIME = 15 * 1000;     //Kai: initially 30 * 1000 = 30 seconds
+  private static final int SCROBBLE_THRESHOLD = 1 * 30 * 1000;    //Kai: initially 4 * 60 * 1000 = 4 minutes
+  private static final int MINIMUM_SCROBBLE_TIME = 30 * 1000;     //Kai: initially 30 * 1000 = 30 seconds
   private static final int MAX_SCROBBLES = 50;
 
   private final LastfmClient client;
@@ -218,6 +218,10 @@ Log.v("Wichtig", "newScrobbles: " + newScrobbles);  //Kai
     boolean tracksPending = !(pending.isEmpty() && pendingPlaybackItems.isEmpty());
     boolean backoff = lastScrobbleTime + nextScrobbleDelay > System.currentTimeMillis();
 
+    if(LastfmClient.isScrobbleTaskBlocked){  //Kai
+      return;
+    }
+
     if (!isConnected || !client.isAuthenticated() || backoff) {
       return;
     }
@@ -252,6 +256,12 @@ Log.v("Wichtig", "newScrobbles: " + newScrobbles);  //Kai
       tracksToScrobble.remove(tracksToScrobble.size() - 1);
     }
 
+    Log.v("WICHTIG!", "!!!Beginn tracksToScrobble");
+    for(Scrobble s : tracksToScrobble){
+      Log.v("WICHTIG!", s.track().track() + s.track().artist());
+    }
+    Log.v("WICHTIG!", "!!!Ende tracksToScrobble");
+
     /*
     if(lastPlaybackItems != null) {            //Kai: auch gegen Dopplungen: Methode kann nur 1x aufgerufen werden
     for(int i = 0; i < tracksToScrobble.size(); i++){
@@ -262,7 +272,7 @@ Log.v("Wichtig", "newScrobbles: " + newScrobbles);  //Kai
     }
 */
 
-    if(!LastfmClient.isScrobbleTaskBlocked){
+   // if(!LastfmClient.isScrobbleTaskBlocked){
       client.scrobbleTracks(
               tracksToScrobble,
               message -> {
@@ -315,7 +325,7 @@ Log.v("Wichtig", "newScrobbles: " + newScrobbles);  //Kai
                 }
                 return false;
               });
-    }else{
+      /*}else{
       Thread myThread = new Thread() {
         public void run() {
           Log.v("WICHTIG!", "Thread Start");
@@ -384,7 +394,7 @@ Log.v("Wichtig", "newScrobbles: " + newScrobbles);  //Kai
       myThread.start();
     }
 
-
+*/
 
 
   }

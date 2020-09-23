@@ -63,7 +63,7 @@ public class LastfmClient {
   private static final int MAX_LAST_SCROBBLED_SIZE = 3; //Kai
   //public static int numberOfFakeSuccess = 0; //Kai
   public static boolean isScrobbleTaskBlocked = false; //Kai
-  public static int myThreadCounter = 0;  //Kai
+  //public static int myThreadCounter = 0;  //Kai
 
   /**
    * Creates a new authenticated client.
