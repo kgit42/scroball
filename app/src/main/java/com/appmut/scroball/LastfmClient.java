@@ -59,8 +59,9 @@ public class LastfmClient {
   private final Caller caller;
   private Session session;
 
-  public static ArrayList<String> lastScrobbledTracks = new ArrayList<String>(); //Kai
-  private static final int MAX_LAST_SCROBBLED_SIZE = 3; //Kai
+  public static ArrayList<String> lastScrobbledTracks = new ArrayList<String>(); //Kai: with timestamps
+  public static ArrayList<String> lastXScrobbledTracks = new ArrayList<String>(); //Kai: without timestamp
+  private static final int MAX_LAST_SCROBBLED_SIZE = 2; //Kai
   //public static int numberOfFakeSuccess = 0; //Kai
   public static boolean isScrobbleTaskBlocked = false; //Kai
   //public static int myThreadCounter = 0;  //Kai
@@ -158,17 +159,18 @@ public class LastfmClient {
 
     for (int i = 0; i < scrobbles.size(); i++) {
       Scrobble scrobble = scrobbles.get(i);
+      String scrobbleString = scrobble.track().track() + scrobble.track().artist() + scrobble.timestamp();
       String trackAndArtist = scrobble.track().track() + scrobble.track().artist();
 
-      Log.v("WICHTIG!", trackAndArtist);  //Kai
+      Log.v("WICHTIG!", scrobbleString);  //Kai
       Log.v("WICHTIG!", "---Vergleich Start: (" + lastScrobbledTracks.size() + ")");
       for (int j = 0; j < lastScrobbledTracks.size(); j++) {
         Log.v("WICHTIG!", "aktuelles j: " + j + " von: " + lastScrobbledTracks.size());
-        Log.v("WICHTIG!", lastScrobbledTracks.get(j) + " AND " + trackAndArtist + " are the same?" + lastScrobbledTracks.get(j).equals(trackAndArtist));
+        Log.v("WICHTIG!", lastScrobbledTracks.get(j) + " AND " + scrobbleString + " are the same?" + lastScrobbledTracks.get(j).equals(scrobbleString));
       }
       Log.v("WICHTIG!", "---Vergleich Ende: ");
 
-      if (lastScrobbledTracks.contains(trackAndArtist) || doubleScrobblesChecker.contains(trackAndArtist)) {   //Kai: Wenn das Element schon mal in den letzten 4 Scrobbles vorkam, wird ein "Fake Success Code" im AsyncTask (s. u.) erzeugt
+      if (lastScrobbledTracks.contains(scrobbleString) || doubleScrobblesChecker.contains(trackAndArtist) || lastXScrobbledTracks.contains(trackAndArtist)) {   //Kai: Wenn das Element schon mal in den letzten 4 Scrobbles vorkam, wird ein "Fake Success Code" im AsyncTask (s. u.) erzeugt
         //numberOfFakeSuccess++;
         scrobbleData[i] = new ScrobbleData();    //nein, stattdessen einfach ein leeres ScrobbleData, sonst NullPointerE
       } else {
@@ -218,6 +220,18 @@ public class LastfmClient {
     try {
       for (int j = 0; j < lastScrobbledTracks.size(); j++) {
         s = s.concat(lastScrobbledTracks.get(j) + "\n");
+      }
+    }catch(Exception e){
+      s.concat(e.getMessage());
+    }
+    return s;
+  }
+
+  public static String getLastXScrobbledTracks(){ //Kai
+    String s = new String();
+    try {
+      for (int j = 0; j < lastXScrobbledTracks.size(); j++) {
+        s = s.concat(lastXScrobbledTracks.get(j) + "\n");
       }
     }catch(Exception e){
       s.concat(e.getMessage());
@@ -374,7 +388,7 @@ public class LastfmClient {
       callback.handleMessage(message);
     }
   }
-
+/*
   //Kai: geht leider nicht so, da api.scrobble eine Netzwerk-Aktivität ist und diese nicht im UI Thread laufen sollten, da App sonst einfriert. --> Async Task doch nötig
   private static List<Result> scrobbleTracksTask(LastfmApi api, Session session, Handler.Callback callback, int numberOfFakeSuccess, ScrobbleData... params){  //Kai: AsyncTask zu synchroner normaler Methode gemacht.
     if(params != null){
@@ -401,11 +415,11 @@ public class LastfmClient {
             builder.add(Result.error(errorCode >= 0 ? errorCode : ERROR_UNKNOWN));
           }
         }
-          /*
+
           for(int i = 0; i < numberOfFakeSuccess; i++){   //Kai
             builder.add(Result.success());
           }
-*/
+
         return builder.build();
       } catch (CallException e) {
         Log.d(TAG, "Failed to submit scrobbles", e);
@@ -423,13 +437,14 @@ public class LastfmClient {
         for(int i = 0; i < numberOfFakeSuccess; i++){   //Kai
           builder.add(Result.success());
         }
-        */
+
 
 
       return builder.build();
     }
 
   }
+*/
 
   private static class ScrobbleTracksTask extends AsyncTask<ScrobbleData, Object, List<Result>> {
     private final LastfmApi api;
@@ -462,12 +477,14 @@ public class LastfmClient {
 
           for (ScrobbleResult result : results) {
             if (result.isSuccessful()) {
-              String trackAndArtist = result.getTrack() + result.getArtist(); //Kai
-              if(!trackAndArtist.equals("nullnull") && !lastScrobbledTracks.contains(trackAndArtist)){  //Kai
-                lastScrobbledTracks.add(result.getTrack() + result.getArtist());  //Kai
+              String scrobbleString = result.getTrack() + result.getArtist() + result.getTimestamp(); //Kai
+              if(!scrobbleString.startsWith("nullnull") ){ //&& !lastScrobbledTracks.contains(trackAndArtist)){  //Kai
+                lastScrobbledTracks.add(result.getTrack() + result.getArtist() + result.getTimestamp());  //Kai
+                lastXScrobbledTracks.add(result.getTrack() + result.getArtist()); //KAI
               }
-              if(lastScrobbledTracks.size() > MAX_LAST_SCROBBLED_SIZE){ //Kai
-                lastScrobbledTracks.remove(0);
+
+              if(lastXScrobbledTracks.size() > MAX_LAST_SCROBBLED_SIZE){ //Kai
+                lastXScrobbledTracks.remove(0);
               }
               Log.v("WICHTIG!", result.getTrack() + result.getArtist());
 

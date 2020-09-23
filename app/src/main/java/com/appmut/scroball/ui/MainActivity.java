@@ -215,7 +215,15 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
 
       TextView textview2 = (TextView) findViewById(R.id.counterBox);
       textview2.setText(Boolean.toString(LastfmClient.isScrobbleTaskBlocked));
+
+      TextView textview3 = (TextView) findViewById(R.id.logBox2);
+      textview3.setText(LastfmClient.getLastXScrobbledTracks());
+
       //Toast.makeText(getApplicationContext(), Integer.toString(LastfmClient.getLastScrobbledTracks().length()), Toast.LENGTH_LONG).show();
+    }
+
+    public void toFalseButton(View view) { //Kai
+      LastfmClient.isScrobbleTaskBlocked = false;
     }
 
     /**
