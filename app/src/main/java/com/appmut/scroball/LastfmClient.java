@@ -7,6 +7,7 @@ import android.os.Message;
 import androidx.annotation.NonNull;
 import android.util.Log;
 
+import com.appmut.scroball.ui.ScrobbleIdentifier;
 import com.google.auto.value.AutoValue;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
@@ -59,11 +60,12 @@ public class LastfmClient {
   private final Caller caller;
   private Session session;
 
-  public static ArrayList<String> lastScrobbledTracks = new ArrayList<String>(); //Kai: with timestamps
-  public static ArrayList<String> lastXScrobbledTracks = new ArrayList<String>(); //Kai: without timestamp
+  public static ArrayList<ScrobbleIdentifier> lastScrobbledTracks = new ArrayList<ScrobbleIdentifier>(); //Kai: with timestamps: um zu verhindern, dass, wenn man nach vielen Songs den Sender ausschaltet, doppelte nachgereicht werden
+  public static ArrayList<String> lastXScrobbledTracks = new ArrayList<String>(); //Kai: without timestamp: um zu verhindern, dass bei Pause oder anderer Unterbrechung eines Songs dieser nochmal gescrobbelt wird
   private static final int MAX_LAST_SCROBBLED_SIZE = 2; //Kai
   //public static int numberOfFakeSuccess = 0; //Kai
   public static boolean isScrobbleTaskBlocked = false; //Kai
+  public static final int TIMESTAMP_THRESHOLD = 300;  //Kai
   //public static int myThreadCounter = 0;  //Kai
 
   /**
@@ -149,7 +151,7 @@ public class LastfmClient {
     isScrobbleTaskBlocked = true; //Kai
 
     //int numberOfFakeSuccess = 0;
-    ArrayList<String> doubleScrobblesChecker = new ArrayList<String>(); //Kai: diese Liste prüft, ob die Scrobbles, die der Methode hier als param übergeben werden, gleiche enthalten
+    ArrayList<String> doubleScrobblesChecker = new ArrayList<String>(); //Kai: diese Liste prüft, ob die Scrobbles, die der Methode hier als param übergeben werden, gleiche enthalten: verhindern, dass, wenn ein Lied fälschlicherweise länger da steht als es lang ist, es 2x gescrobbelt wird
 
 
 
@@ -159,19 +161,27 @@ public class LastfmClient {
 
     for (int i = 0; i < scrobbles.size(); i++) {
       Scrobble scrobble = scrobbles.get(i);
-      String scrobbleString = scrobble.track().track() + scrobble.track().artist() + scrobble.timestamp();
+      ScrobbleIdentifier scrobbleIdentifier = new ScrobbleIdentifier(scrobble.track().track(), scrobble.track().artist(), scrobble.timestamp());  //Kai
+      //String scrobbleString = {scrobble.track().track() + scrobble.track().artist(), scrobble.timestamp()};
       String trackAndArtist = scrobble.track().track() + scrobble.track().artist();
 
-      Log.v("WICHTIG!", scrobbleString);  //Kai
+      Log.v("WICHTIG!", scrobbleIdentifier.toString());  //Kai
       Log.v("WICHTIG!", "---Vergleich Start: (" + lastScrobbledTracks.size() + ")");
       for (int j = 0; j < lastScrobbledTracks.size(); j++) {
         Log.v("WICHTIG!", "aktuelles j: " + j + " von: " + lastScrobbledTracks.size());
-        Log.v("WICHTIG!", lastScrobbledTracks.get(j) + " AND " + scrobbleString + " are the same?" + lastScrobbledTracks.get(j).equals(scrobbleString));
+        Log.v("WICHTIG!", lastScrobbledTracks.get(j) + " AND " + scrobbleIdentifier.toString() + " are the same?" + lastScrobbledTracks.get(j).equals(scrobbleIdentifier));
       }
       Log.v("WICHTIG!", "---Vergleich Ende: ");
 
-      if (lastScrobbledTracks.contains(scrobbleString) || doubleScrobblesChecker.contains(trackAndArtist) || lastXScrobbledTracks.contains(trackAndArtist)) {   //Kai: Wenn das Element schon mal in den letzten 4 Scrobbles vorkam, wird ein "Fake Success Code" im AsyncTask (s. u.) erzeugt
+      if (lastScrobbledTracks.contains(scrobbleIdentifier) || doubleScrobblesChecker.contains(trackAndArtist) || lastXScrobbledTracks.contains(trackAndArtist)) {   //Kai: Wenn das Element schon mal in den letzten 4 Scrobbles vorkam, wird ein "Fake Success Code" im AsyncTask (s. u.) erzeugt
         //numberOfFakeSuccess++;
+        if(lastScrobbledTracks.contains(scrobbleIdentifier)){ //wenn ein gleicher Track gefunden wurde, der zu ähnlicher Zeit (siehe TIMESTAMP_THRESHOLD) gescrobbelt wurde, bekommt der Track in der Liste diesen neuen Timestamp (damit, falls noch weitere doppelte Scrobbles folgen, diese auch abgefangen werden...)
+          for(int k = 0; k < lastScrobbledTracks.size(); k++){
+            if (lastScrobbledTracks.get(k).equals(scrobbleIdentifier)) {
+              lastScrobbledTracks.get(k).setTimestamp(scrobbleIdentifier.getTimestamp());
+            }
+          }
+        }
         scrobbleData[i] = new ScrobbleData();    //nein, stattdessen einfach ein leeres ScrobbleData, sonst NullPointerE
       } else {
         doubleScrobblesChecker.add(trackAndArtist); //Kai
@@ -219,7 +229,7 @@ public class LastfmClient {
     String s = new String();
     try {
       for (int j = 0; j < lastScrobbledTracks.size(); j++) {
-        s = s.concat(lastScrobbledTracks.get(j) + "\n");
+        s = s.concat(lastScrobbledTracks.get(j).toString() + "\n");
       }
     }catch(Exception e){
       s.concat(e.getMessage());
@@ -477,9 +487,10 @@ public class LastfmClient {
 
           for (ScrobbleResult result : results) {
             if (result.isSuccessful()) {
-              String scrobbleString = result.getTrack() + result.getArtist() + result.getTimestamp(); //Kai
-              if(!scrobbleString.startsWith("nullnull") ){ //&& !lastScrobbledTracks.contains(trackAndArtist)){  //Kai
-                lastScrobbledTracks.add(result.getTrack() + result.getArtist() + result.getTimestamp());  //Kai
+              ScrobbleIdentifier scrobbleIdentifier = new ScrobbleIdentifier(result.getTrack(), result.getArtist(), result.getTimestamp());
+              //String scrobbleString = result.getTrack() + result.getArtist() + result.getTimestamp(); //Kai
+              if(scrobbleIdentifier.getTrack() != null || scrobbleIdentifier.getArtist() != null){ //&& !lastScrobbledTracks.contains(trackAndArtist)){  //Kai
+                lastScrobbledTracks.add(new ScrobbleIdentifier(result.getTrack(), result.getArtist(), result.getTimestamp()));  //Kai
                 lastXScrobbledTracks.add(result.getTrack() + result.getArtist()); //KAI
               }
 

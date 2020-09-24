@@ -57,7 +57,6 @@
                     android:id="@+id/logBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
                     android:text=" Log \n Log2 \n Log3" />
             </ScrollView>
 
