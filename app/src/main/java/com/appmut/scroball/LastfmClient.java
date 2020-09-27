@@ -66,6 +66,7 @@ public class LastfmClient {
   //public static int numberOfFakeSuccess = 0; //Kai
   public static boolean isScrobbleTaskBlocked = false; //Kai
   public static final int TIMESTAMP_THRESHOLD = 300;  //Kai
+  public static ArrayList<String> failedToScrobble = new ArrayList<String>(); //Kai
   //public static int myThreadCounter = 0;  //Kai
 
   /**
@@ -229,7 +230,7 @@ public class LastfmClient {
     String s = new String();
     try {
       for (int j = 0; j < lastScrobbledTracks.size(); j++) {
-        s = s.concat(lastScrobbledTracks.get(j).toString() + "\n");
+        s = s.concat(lastScrobbledTracks.get(j).toString() + "\n" + "\n");
       }
     }catch(Exception e){
       s.concat(e.getMessage());
@@ -242,6 +243,18 @@ public class LastfmClient {
     try {
       for (int j = 0; j < lastXScrobbledTracks.size(); j++) {
         s = s.concat(lastXScrobbledTracks.get(j) + "\n");
+      }
+    }catch(Exception e){
+      s.concat(e.getMessage());
+    }
+    return s;
+  }
+
+  public static String getFailedToScrobble(){ //Kai
+    String s = new String();
+    try {
+      for (int j = 0; j < failedToScrobble.size(); j++) {
+        s = s.concat(failedToScrobble.get(j) + "\n" + "\n");
       }
     }catch(Exception e){
       s.concat(e.getMessage());
@@ -489,7 +502,7 @@ public class LastfmClient {
             if (result.isSuccessful()) {
               ScrobbleIdentifier scrobbleIdentifier = new ScrobbleIdentifier(result.getTrack(), result.getArtist(), result.getTimestamp());
               //String scrobbleString = result.getTrack() + result.getArtist() + result.getTimestamp(); //Kai
-              if(scrobbleIdentifier.getTrack() != null || scrobbleIdentifier.getArtist() != null){ //&& !lastScrobbledTracks.contains(trackAndArtist)){  //Kai
+              if(!scrobbleIdentifier.getTrack().equals("null") || !scrobbleIdentifier.getArtist().equals("null")){ //&& !lastScrobbledTracks.contains(trackAndArtist)){  //Kai
                 lastScrobbledTracks.add(new ScrobbleIdentifier(result.getTrack(), result.getArtist(), result.getTimestamp()));  //Kai
                 lastXScrobbledTracks.add(result.getTrack() + result.getArtist()); //KAI
               }

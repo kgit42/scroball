@@ -74,6 +74,11 @@ public abstract class Track implements Serializable {
       builder.art(art);
     }
     if (artist != null) {
+      if(title.equals("SWR3") || title.equals("Radio Bonn/Rhein-Sieg")){   //Kai
+        return new TitleExtractor().transformByArtist(builder.track("").artist(artist).build(), false);
+      }else if(title.equals("1LIVE")){
+        return new TitleExtractor().transformByArtist(builder.track("").artist(artist).build(), true);
+      }
       builder.artist(artist);
     } else if (albumArtist != null) {
       // Some apps (Telegram) set ALBUM_ARTIST but not ARTIST.

@@ -189,6 +189,18 @@ Log.v("Wichtig", "newScrobbles: " + newScrobbles);  //Kai
             if (errorCode == 6) {
               Log.d(TAG, "Track not found, cannot scrobble.");
               // TODO prompt user to scrobble anyway
+
+              /*
+              Track.Builder builder = Track.builder().track(playbackItem.getTrack().artist());    //Kai: switcht Artist und Title und versucht es nochmal
+              builder.artist(playbackItem.getTrack().track());    //Kai         //UPDATE: nein, lieber doch nicht weil Last.fm hat irgendwie auch viele vertauschte
+
+              Track switchedTrack = builder.build();    //Kai
+              playbackItem.updateTrack(switchedTrack);    //Kai
+
+              LastfmClient.failedToScrobble.add("Track: " + playbackItem.getTrack().track());*/
+              if(!track.track().equals("") && !track.artist().equals("")){
+                LastfmClient.failedToScrobble.add(track.track() + track.artist() + "// REASON: Track not found, cannot scrobble.");  //Kai
+              }
             } else {
               if (LastfmClient.isTransientError(errorCode)) {
                 Log.d(TAG, "Failed to fetch track duration, saving for later.");
@@ -197,6 +209,8 @@ Log.v("Wichtig", "newScrobbles: " + newScrobbles);  //Kai
               if (LastfmClient.isAuthenticationError(errorCode)) {
                 notificationManager.notifyAuthError();
                 ScroballApplication.getEventBus().post(AuthErrorEvent.create(errorCode));
+              }else{
+                //queuePendingPlaybackItem(playbackItem); //Kai
               }
             }
             return true;

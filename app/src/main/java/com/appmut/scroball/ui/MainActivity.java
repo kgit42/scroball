@@ -1,6 +1,7 @@
 package com.appmut.scroball.ui;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -210,8 +211,8 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
   }
 
     public void updateLogButton(View view) {  //Kai
-      TextView textview = (TextView) findViewById(R.id.logBox);
-      textview.setText(LastfmClient.getLastScrobbledTracks());
+      TextView textview1 = (TextView)findViewById(R.id.logBox);
+      textview1.setText(LastfmClient.getLastScrobbledTracks());
 
       TextView textview2 = (TextView) findViewById(R.id.counterBox);
       textview2.setText(Boolean.toString(LastfmClient.isScrobbleTaskBlocked));
@@ -219,12 +220,45 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
       TextView textview3 = (TextView) findViewById(R.id.logBox2);
       textview3.setText(LastfmClient.getLastXScrobbledTracks());
 
+      TextView textview4 = (TextView) findViewById(R.id.logBoxErrors);
+      textview4.setText(LastfmClient.getFailedToScrobble());
+
+
+
       //Toast.makeText(getApplicationContext(), Integer.toString(LastfmClient.getLastScrobbledTracks().length()), Toast.LENGTH_LONG).show();
     }
+/*
+    public void showDialog1(View view) {
+    showDialog(0, null);
+    }
+
+    public void showDialog2(View view) {
+    showDialog(1, null);
+    }
+*/
+    /*
+  @Override
+  protected Dialog onCreateDialog(int id, Bundle savedInstanceState) {
+    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Light_Dialog_Alert);
+    switch(id){
+      case 0:
+        TextView t = (TextView) findViewById(R.id.logBox);
+        dialogBuilder.setView(t);
+        //dialogBuilder.setMessage(LastfmClient.getLastScrobbledTracks());
+        break;
+      case 1:
+        dialogBuilder.setMessage(LastfmClient.getFailedToScrobble());
+        break;
+    }
+    dialogBuilder.setCancelable(false);
+    dialogBuilder.setPositiveButton("OK",null);
+    AlertDialog dialog = dialogBuilder.create();
+    return dialog;
+  }*/
 
     public void toFalseButton(View view) { //Kai
       LastfmClient.isScrobbleTaskBlocked = false;
-    }
+    } //Kai
 
     /**
    * A {@link FragmentPagerAdapter} that returns a fragment corresponding to one of the

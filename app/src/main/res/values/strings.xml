@@ -45,7 +45,7 @@
     <string name="privacy_policy">Privacy policy</string>
 
     <!-- Strings related to the now playing screen -->
-    <string name="nothing_playing">Nothing playing</string>
+    <string name="nothing_playing"></string>
 
     <!-- Strings related to notifications -->
     <string name="notification_channel_name_scrobble">Scrobbles</string>
