@@ -16,6 +16,9 @@ public class PlaybackTracker {
   private final MetadataTransformers metadataTransformers = new MetadataTransformers();
   private Map<String, PlayerState> playerStates = new HashMap<>();
 
+  private static long lastMetadataChangePermitted = Long.MAX_VALUE;  //Kai
+  public static final long REPROCESS_THRESHOLD = 30 * 1000; //Kai
+
   public PlaybackTracker(
       ScrobbleNotificationManager scrobbleNotificationManager, Scrobbler scrobbler) {
     this.scrobbleNotificationManager = scrobbleNotificationManager;
@@ -40,10 +43,16 @@ public class PlaybackTracker {
         metadataTransformers.transformForPackageName(player, Track.fromMediaMetadata(metadata));
 
     if (!track.isValid()) {
-      Log.v("IMP", "Oh no!");
-      //handleSessionTermination(player); //Kai
-      //return;     //im Prinzip einzige Änderung: Das return hier entfernen. Wenn Track nicht valid ist, soll er trotzdem übernommen werden, sonst bleibt alter Track bestehen und wird mehrfach gescrobbelt.
+      Log.v("IMP", "Oh no!"); //Kai
+      //LastfmClient.failedToScrobble.add(Long.toString(System.currentTimeMillis() - lastMetadataChangePermitted)); //Kai
+      if(Math.abs(System.currentTimeMillis() - lastMetadataChangePermitted) < REPROCESS_THRESHOLD ){  //Kai
+        return;
+      }else{
+
+      }
+           //im Prinzip einzige Änderung: Das return hier entfernen. Wenn Track nicht valid ist, soll er trotzdem übernommen werden, sonst bleibt alter Track bestehen und wird mehrfach gescrobbelt.
     }
+    lastMetadataChangePermitted = System.currentTimeMillis(); //Kai
 
     PlayerState playerState = getOrCreatePlayerState(player);
     playerState.setTrack(track);
@@ -56,6 +65,12 @@ public class PlaybackTracker {
             .setState(PlaybackState.STATE_PAUSED, PlaybackState.PLAYBACK_POSITION_UNKNOWN, 1)
             .build();
     playerState.setPlaybackState(playbackState);
+
+    /*
+    Track.Builder builder = Track.builder().track("");  //Kai: wenn man das Radio pausiert, wird der PlaybackState gecleart
+    builder.artist("");
+    Track track = builder.build();
+    playerState.setTrack(track);*/
   }
 
   private PlayerState getOrCreatePlayerState(String player) {
