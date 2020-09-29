@@ -225,6 +225,8 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
 
 
 
+
+
       //Toast.makeText(getApplicationContext(), Integer.toString(LastfmClient.getLastScrobbledTracks().length()), Toast.LENGTH_LONG).show();
     }
 /*

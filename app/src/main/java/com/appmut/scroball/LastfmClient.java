@@ -68,6 +68,7 @@ public class LastfmClient {
   public static final int TIMESTAMP_THRESHOLD = 300;  //Kai
   public static ArrayList<String> failedToScrobble = new ArrayList<String>(); //Kai
   //public static int myThreadCounter = 0;  //Kai
+  public static int counter = 0;  //Kai
 
   /**
    * Creates a new authenticated client.

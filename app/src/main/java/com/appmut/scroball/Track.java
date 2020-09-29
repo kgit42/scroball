@@ -2,12 +2,24 @@ package com.appmut.scroball;
 
 import android.graphics.Bitmap;
 import android.media.MediaMetadata;
+import android.util.Log;
+import android.webkit.WebView;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.base.Optional;
 import com.appmut.scroball.transforms.TitleExtractor;
 
+import org.json.JSONObject;
+
+import java.io.InputStream;
 import java.io.Serializable;
+import java.net.URL;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 @AutoValue
 public abstract class Track implements Serializable {
@@ -41,8 +53,14 @@ public abstract class Track implements Serializable {
     Bitmap art = metadata.getBitmap(MediaMetadata.METADATA_KEY_ART);
     long duration = metadata.getLong(MediaMetadata.METADATA_KEY_DURATION);
 
+
+
+
+
+
     if (title == null) {
       title = metadata.getString(MediaMetadata.METADATA_KEY_DISPLAY_TITLE);
+      //LastfmClient.counter++;   //Kai
 
       if (title == null) {
         title = "";
@@ -74,10 +92,10 @@ public abstract class Track implements Serializable {
       builder.art(art);
     }
     if (artist != null) {
-      if(title.equals("SWR3") || title.equals("Radio Bonn/Rhein-Sieg")){   //Kai
+      if(title.equals("Radio Bonn/Rhein-Sieg")){   //Kai
         return new TitleExtractor().transformByArtist(builder.track("").artist(artist).build(), false);
-      }else if(title.equals("1LIVE")){
-        return new TitleExtractor().transformByArtist(builder.track("").artist(artist).build(), true);
+      /*}else if(title.equals("1LIVE")){
+        return new TitleExtractor().transformByArtist(builder.track("").artist(artist).build(), true);*/
       }
       builder.artist(artist);
     } else if (albumArtist != null) {

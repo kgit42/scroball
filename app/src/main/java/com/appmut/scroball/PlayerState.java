@@ -44,6 +44,9 @@ public class PlayerState {
       notificationManager.updateNowPlaying(playbackItem.getTrack());
       scheduleSubmission();
     } else {
+      PlaybackTracker.scheduledFuture.cancel(false);  //Kai
+      PlaybackTracker.pollingTaskRunning = false; //Kai
+
       Log.d(TAG, String.format("Track paused (state %d)", state));
       postEvent(Track.empty());
       playbackItem.stopPlaying();

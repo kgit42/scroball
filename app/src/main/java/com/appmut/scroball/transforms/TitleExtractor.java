@@ -10,7 +10,8 @@ import java.util.regex.Pattern;
 public class TitleExtractor implements MetadataTransform {
 
   private static final String[] SEPARATORS =
-      new String[] {" -- ", "--", " - ", " – ", " — ", "-", "–", "—", ":", "|", "///", "von", " von "};
+      //new String[] {" von ", " -- ", "--", " - ", " – ", " — ", "-", "–", "—", ":", "|", "///", };
+       new String[] {" von ", " -- ", "--", " - ", " – ", " — ", "-", "–", "—", ":", "|", "///", };
 
   @Override
   public Track transform(Track track) {
@@ -43,6 +44,9 @@ public class TitleExtractor implements MetadataTransform {
 
     return track.toBuilder().artist(artist).track(title).build();
   }
+
+
+
 
   public Track transformByArtist(Track track, boolean ArtistFirst) {
     String title = null;
