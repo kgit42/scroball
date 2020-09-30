@@ -190,6 +190,8 @@ Log.v("Wichtig", "newScrobbles: " + newScrobbles);  //Kai
               Log.d(TAG, "Track not found, cannot scrobble.");
               // TODO prompt user to scrobble anyway
 
+              submit(playbackItem); //Kai: trotzdem versuchen zu scrobbeln
+
               /*
               Track.Builder builder = Track.builder().track(playbackItem.getTrack().artist());    //Kai: switcht Artist und Title und versucht es nochmal
               builder.artist(playbackItem.getTrack().track());    //Kai         //UPDATE: nein, lieber doch nicht weil Last.fm hat irgendwie auch viele vertauschte
@@ -198,7 +200,7 @@ Log.v("Wichtig", "newScrobbles: " + newScrobbles);  //Kai
               playbackItem.updateTrack(switchedTrack);    //Kai
 
               LastfmClient.failedToScrobble.add("Track: " + playbackItem.getTrack().track());*/
-              String msg = track.track() + track.artist() + "// REASON: Track not found, cannot scrobble."; //Kai
+              String msg = track.track() + track.artist() + "// REASON: Track not found, cannot scrobble. But trying even though..."; //Kai
               if(!track.track().equals("") && !track.artist().equals("") && !LastfmClient.failedToScrobble.contains(msg)){  //Kai
                 LastfmClient.failedToScrobble.add(msg);  //Kai
               }
@@ -298,8 +300,18 @@ Log.v("Wichtig", "newScrobbles: " + newScrobbles);  //Kai
                   LastfmClient.Result result = results.get(i);
                   Scrobble scrobble = tracksToScrobble.get(i);
 
-                  if (result.isSuccessful()) {
+                  if (result.getCorrectedTitle() != null || result.getCorrectedArtist() != null) { //Kai
+                    pending.remove(scrobble);
 
+                    Track.Builder builder = Track.builder().track(result.getCorrectedTitle());
+                    builder.artist(result.getCorrectedArtist());
+                    Scrobble correctedScrobble = Scrobble.builder().track(builder.build()).timestamp(scrobble.timestamp()).build();
+                    LastfmClient.failedToScrobble.add("Received corrected Scrobble: " + result.getCorrectedArtist() + " " + result.getCorrectedTitle());
+                    pending.add(correctedScrobble);
+
+                  }
+
+                  if (result.isSuccessful()) {
 
                     scrobble.status().setScrobbled(true);
                     scroballDB.writeScrobble(scrobble);
@@ -315,6 +327,9 @@ Log.v("Wichtig", "newScrobbles: " + newScrobbles);  //Kai
                       notificationManager.notifyAuthError();
                       ScroballApplication.getEventBus().post(AuthErrorEvent.create(errorCode));
                     }
+
+
+
                     scrobble.status().setErrorCode(errorCode);
                     scroballDB.writeScrobble(scrobble);
                   }

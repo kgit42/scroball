@@ -78,6 +78,12 @@ public class PlaybackTracker {
             JSONObject currentTrack = jObject.getJSONObject("currentTrack");
 
             String title = currentTrack.getString("title");
+            String newTitle = "";
+            if(title.endsWith("*")){
+              newTitle = title.substring(0, title.length() - 1);
+            }else{
+              newTitle = title;
+            }
             String artist = currentTrack.getString("artist");
 
             String duration = currentTrack.getString("duration");
@@ -91,10 +97,10 @@ public class PlaybackTracker {
             Log.v("WICHTIG!", String.valueOf(System.currentTimeMillis() / 1000));
             Log.v("WICHTIG!", Boolean.toString((System.currentTimeMillis() / 1000) < endTime));
             if((System.currentTimeMillis() / 1000) < endTime){    //Kai: nur neuen Track setzen, wenn Song nicht schon um ist
-              Track.Builder builder = Track.builder().track(title);
+              Track.Builder builder = Track.builder().track(newTitle);
               builder.artist(artist);
               track = builder.build();
-              Log.v("WICHTIG!", title + artist);
+              Log.v("WICHTIG!", newTitle + artist);
             }else{
               Track.Builder builder = Track.builder().track("");
               builder.artist("");

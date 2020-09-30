@@ -501,19 +501,28 @@ public class LastfmClient {
 
           for (ScrobbleResult result : results) {
             if (result.isSuccessful()) {
-              ScrobbleIdentifier scrobbleIdentifier = new ScrobbleIdentifier(result.getTrack(), result.getArtist(), result.getTimestamp());
-              //String scrobbleString = result.getTrack() + result.getArtist() + result.getTimestamp(); //Kai
-              if(!scrobbleIdentifier.getTrack().equals("null") || !scrobbleIdentifier.getArtist().equals("null")){ //&& !lastScrobbledTracks.contains(trackAndArtist)){  //Kai
-                lastScrobbledTracks.add(new ScrobbleIdentifier(result.getTrack(), result.getArtist(), result.getTimestamp()));  //Kai
-                lastXScrobbledTracks.add(result.getTrack() + result.getArtist()); //KAI
+              if(result.isArtistCorrected() || result.isTrackCorrected()) { //Kai
+                Result resultToAdd = Result.error(ERROR_UNKNOWN); //Kai
+                resultToAdd.setCorrected(result.getTrack(), result.getArtist());  //Kai
+                builder.add(resultToAdd); //Kai
+                failedToScrobble.add("Corrected Item received and try to scrobble... " + result.getTrack() + result.getArtist());
+              }else{
+                ScrobbleIdentifier scrobbleIdentifier = new ScrobbleIdentifier(result.getTrack(), result.getArtist(), result.getTimestamp());
+                //String scrobbleString = result.getTrack() + result.getArtist() + result.getTimestamp(); //Kai
+                if(!scrobbleIdentifier.getTrack().equals("null") || !scrobbleIdentifier.getArtist().equals("null")){ //&& !lastScrobbledTracks.contains(trackAndArtist)){  //Kai
+                  lastScrobbledTracks.add(new ScrobbleIdentifier(result.getTrack(), result.getArtist(), result.getTimestamp()));  //Kai
+                  lastXScrobbledTracks.add(result.getTrack() + result.getArtist()); //KAI
+                }
+
+                if(lastXScrobbledTracks.size() > MAX_LAST_SCROBBLED_SIZE){ //Kai
+                  lastXScrobbledTracks.remove(0);
+                }
+                Log.v("WICHTIG!", result.getTrack() + result.getArtist());
+
+                builder.add(Result.success());
               }
 
-              if(lastXScrobbledTracks.size() > MAX_LAST_SCROBBLED_SIZE){ //Kai
-                lastXScrobbledTracks.remove(0);
-              }
-              Log.v("WICHTIG!", result.getTrack() + result.getArtist());
 
-              builder.add(Result.success());
 
             } else {
               int errorCode = result.getErrorCode();
@@ -647,7 +656,25 @@ public class LastfmClient {
   @AutoValue
   public abstract static class Result {
 
+    public String correctedTitle; //Kai
+    public String correctedArtist; //Kai
+
+    public void setCorrected(String title, String artist){ //Kai
+      this.correctedTitle = title;
+      this.correctedArtist = artist;
+    }
+
+    public String getCorrectedTitle(){ //Kai
+      return correctedTitle;
+    }
+
+    public String getCorrectedArtist(){ //Kai
+      return correctedArtist;
+    }
+
+
     public abstract int errorCode();
+
 
     public boolean isSuccessful() {
       return errorCode() < 0;
