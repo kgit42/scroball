@@ -11,7 +11,7 @@ public class TitleExtractor implements MetadataTransform {
 
   private static final String[] SEPARATORS =
       //new String[] {" von ", " -- ", "--", " - ", " – ", " — ", "-", "–", "—", ":", "|", "///", };
-       new String[] {" von ", " -- ", "--", " - ", " – ", " — ", "-", "–", "—", ":", "|", "///", };
+       new String[] {" von ", " -- ", "--", " – ", " — ", "—", "–", "///", "|", " - ", "-", ":" };  //Kai
 
   @Override
   public Track transform(Track track) {

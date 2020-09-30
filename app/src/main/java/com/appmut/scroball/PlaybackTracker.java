@@ -52,7 +52,7 @@ public class PlaybackTracker {
 
 
 
-    if (metadata.getString(MediaMetadata.METADATA_KEY_TITLE).equals("1LIVE") || !PlaybackTracker.pollingTaskRunning) {   //Kai: Task um von 1LIVE die Metadaten abzugreifen
+    if (metadata.getString(MediaMetadata.METADATA_KEY_TITLE).equals("1LIVE") && !PlaybackTracker.pollingTaskRunning) {   //Kai: Task um von 1LIVE die Metadaten abzugreifen
 
       PlaybackTracker.pollingTaskRunning = true;
       ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
@@ -129,7 +129,7 @@ public class PlaybackTracker {
 
       Track track = null;
 
-      if(PlaybackTracker.pollingTaskRunning) {     //Kai
+      if(PlaybackTracker.pollingTaskRunning && scheduledFuture != null) {     //Kai
         PlaybackTracker.scheduledFuture.cancel(false);
         PlaybackTracker.pollingTaskRunning = false;
       }
