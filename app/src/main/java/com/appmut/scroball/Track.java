@@ -65,6 +65,14 @@ public abstract class Track implements Serializable {
       if (title == null) {
         title = "";
       }
+
+
+    }
+
+    if(title.equals("1LIVE")){  //Kai
+      Track.Builder builder = Track.builder().track("");
+      builder.artist("");
+      return builder.build();
     }
 
     if (art == null) {
