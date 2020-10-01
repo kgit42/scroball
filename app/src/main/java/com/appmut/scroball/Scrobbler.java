@@ -77,7 +77,7 @@ public class Scrobbler {
         });
   }
 
-  public void submit(PlaybackItem playbackItem) {
+  public void submit(PlaybackItem playbackItem, boolean skipFetchingTrackDuration) {
     //Log.v("WICHTIG", "submit function: " + playbackItem.toString());
     //Log.v("WICHTIG", "lastplaybackitem: " + lastPlaybackItem);
    /* if(lastPlaybackItem != null) {
@@ -97,14 +97,26 @@ public class Scrobbler {
     // Generate one scrobble per played period.
     Track track = playbackItem.getTrack();
 
-    if (!track.duration().isPresent()) {
-      fetchTrackDurationAndSubmit(playbackItem);
-      return;
+    if(!skipFetchingTrackDuration){    //Kai
+      if (!track.duration().isPresent()) {
+        fetchTrackDurationAndSubmit(playbackItem);
+        return;
+      }
     }
 
-    long timestamp = playbackItem.getTimestamp();
-    long duration = track.duration().get();
+
+    long duration = 0;  //Kai
     long playTime = playbackItem.getAmountPlayed();
+    long timestamp = playbackItem.getTimestamp();
+
+    if(!track.duration().isPresent()){  //Kai
+      duration = playTime;
+    }else{
+      duration = track.duration().get();
+    }
+
+
+
 
     if (playTime < 1) {
       return;
@@ -190,7 +202,7 @@ Log.v("Wichtig", "newScrobbles: " + newScrobbles);  //Kai
               Log.d(TAG, "Track not found, cannot scrobble.");
               // TODO prompt user to scrobble anyway
 
-              submit(playbackItem); //Kai: trotzdem versuchen zu scrobbeln
+              submit(playbackItem, true); //Kai: trotzdem versuchen zu scrobbeln
 
               /*
               Track.Builder builder = Track.builder().track(playbackItem.getTrack().artist());    //Kai: switcht Artist und Title und versucht es nochmal
@@ -223,7 +235,7 @@ Log.v("Wichtig", "newScrobbles: " + newScrobbles);  //Kai
           playbackItem.updateTrack(updatedTrack);
           Log.d(TAG, String.format("Track info updated: %s", playbackItem));
 
-          submit(playbackItem);
+          submit(playbackItem, false);
           return true;
         });
   }

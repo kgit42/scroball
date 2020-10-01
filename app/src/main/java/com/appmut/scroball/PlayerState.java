@@ -54,7 +54,7 @@ public class PlayerState {
       postEvent(Track.empty());
       playbackItem.stopPlaying();
       notificationManager.removeNowPlaying();
-      scrobbler.submit(playbackItem);
+      scrobbler.submit(playbackItem, false);
     }
   }
 
@@ -78,7 +78,7 @@ public class PlayerState {
 
       if (playbackItem != null) {
         playbackItem.stopPlaying();
-        scrobbler.submit(playbackItem);
+        scrobbler.submit(playbackItem, false);
       }
 
       playbackItem = new PlaybackItem(track, now);
@@ -109,7 +109,7 @@ public class PlayerState {
           new TimerTask() {
             @Override
             public void run() {
-              scrobbler.submit(playbackItem);
+              scrobbler.submit(playbackItem, false);
               scheduleSubmission();
             }
           },
