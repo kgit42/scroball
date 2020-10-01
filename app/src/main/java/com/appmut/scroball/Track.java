@@ -115,7 +115,7 @@ public abstract class Track implements Serializable {
       builder.art(art);
     }
     if (artist != null) {
-      if(title.equals("Radio Bonn/Rhein-Sieg") || title.equals("WDR 2") || title.equals("WDR 3") || title.equals("WDR 4") || title.equals("WDR 5") || title.equals("SWR1 Rheinland-Pfalz") || title.equals("SWR2 Kulturradio") || title.equals("SWR4 Rheinland Pfalz")){   //Kai
+      if(title.equals("Radio Bonn/Rhein-Sieg") ||  title.equals("WDR 3") || title.equals("WDR 4") || title.equals("WDR 5") || title.equals("SWR1 Rheinland-Pfalz") || title.equals("SWR2 Kulturradio") || title.equals("SWR4 Rheinland Pfalz")){   //Kai
         return new TitleExtractor().transformByArtist(builder.track("").artist(artist).build(), false);
       /*}else if(title.equals("1LIVE")){
         return new TitleExtractor().transformByArtist(builder.track("").artist(artist).build(), true);*/
