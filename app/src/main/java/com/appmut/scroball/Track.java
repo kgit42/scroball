@@ -75,6 +75,21 @@ public abstract class Track implements Serializable {
       return builder.build();
     }
 
+    if(albumArtist != null){  //Kai
+      if(albumArtist.equals("WDR 2 - Rheinland")){  //Kai
+        Track.Builder builder = Track.builder().track("");
+        builder.artist("");
+        return builder.build();
+      }
+    }
+
+    if(artist.equals("WDR 2 - Rheinland")){  //Kai
+      Track.Builder builder = Track.builder().track("");
+      builder.artist("");
+      return builder.build();
+    }
+
+
     if (art == null) {
       art = metadata.getBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART);
     }

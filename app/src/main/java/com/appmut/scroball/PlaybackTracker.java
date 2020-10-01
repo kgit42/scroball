@@ -50,6 +50,12 @@ public class PlaybackTracker {
       return;
     }
 
+    Log.v("WICHTIG!", "Player: " + player); //Kai
+    boolean switchTrackAndArtist = false;
+    if(player.equals("com.hv.replaio")){  //Kai
+      switchTrackAndArtist = true;
+    }
+
 
 
     if (metadata.getString(MediaMetadata.METADATA_KEY_TITLE).equals("1LIVE") && !PlaybackTracker.pollingTaskRunning) {   //Kai: Task um von 1LIVE die Metadaten abzugreifen
@@ -141,6 +147,12 @@ public class PlaybackTracker {
       }
 
       track = metadataTransformers.transformForPackageName(player, Track.fromMediaMetadata(metadata));
+
+      if(switchTrackAndArtist){ //Kai
+        Track.Builder builder = Track.builder().track(track.artist());
+        builder.artist(track.track());
+        track = builder.build();
+      }
 
       if (!track.isValid()) {
         Log.v("IMP", "Oh no!"); //Kai
