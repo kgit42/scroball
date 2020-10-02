@@ -509,7 +509,7 @@ public class LastfmClient {
               }else{
                 ScrobbleIdentifier scrobbleIdentifier = new ScrobbleIdentifier(result.getTrack(), result.getArtist(), result.getTimestamp());
                 //String scrobbleString = result.getTrack() + result.getArtist() + result.getTimestamp(); //Kai
-                if(!scrobbleIdentifier.getTrack().equals("null") || !scrobbleIdentifier.getArtist().equals("null")){ //&& !lastScrobbledTracks.contains(trackAndArtist)){  //Kai
+                if((!scrobbleIdentifier.getTrack().equals("null") || !scrobbleIdentifier.getArtist().equals("null")) && (!scrobbleIdentifier.getTrack().equals("\"") && !scrobbleIdentifier.getArtist().equals("\""))){ //&& !lastScrobbledTracks.contains(trackAndArtist)){  //Kai
                   lastScrobbledTracks.add(new ScrobbleIdentifier(result.getTrack(), result.getArtist(), result.getTimestamp()));  //Kai
                   lastXScrobbledTracks.add(result.getTrack() + result.getArtist()); //KAI
                 }

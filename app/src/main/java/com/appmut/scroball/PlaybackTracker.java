@@ -25,7 +25,7 @@ public class PlaybackTracker {
   private Map<String, PlayerState> playerStates = new HashMap<>();
 
   private static long lastMetadataChangePermitted = Long.MAX_VALUE;  //Kai
-  public static final long REPROCESS_THRESHOLD = 30 * 1000; //Kai
+  public static final long REPROCESS_THRESHOLD = 0 * 1000; //Kai
   //public static boolean stopCondition = false;   //Kai
   public static ScheduledFuture scheduledFuture = null;
   public static boolean pollingTaskRunning = false; //Kai
