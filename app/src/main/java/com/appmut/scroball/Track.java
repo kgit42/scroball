@@ -69,7 +69,7 @@ public abstract class Track implements Serializable {
 
     }
 
-    if(title.equals("1LIVE")){  //Kai
+    if(title.equals("1LIVE")){  //Kai: 1LIVE soll gar nicht über die Notification gescrobbelt werden, sondern über die Website
       Track.Builder builder = Track.builder().track("");
       builder.artist("");
       return builder.build();

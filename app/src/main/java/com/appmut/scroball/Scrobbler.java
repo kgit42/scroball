@@ -202,7 +202,7 @@ Log.v("Wichtig", "newScrobbles: " + newScrobbles);  //Kai
               Log.d(TAG, "Track not found, cannot scrobble.");
               // TODO prompt user to scrobble anyway
 
-              submit(playbackItem, true); //Kai: trotzdem versuchen zu scrobbeln
+              //submit(playbackItem, true); //Kai: trotzdem versuchen zu scrobbeln // doch nicht
 
               /*
               Track.Builder builder = Track.builder().track(playbackItem.getTrack().artist());    //Kai: switcht Artist und Title und versucht es nochmal
@@ -212,7 +212,7 @@ Log.v("Wichtig", "newScrobbles: " + newScrobbles);  //Kai
               playbackItem.updateTrack(switchedTrack);    //Kai
 
               LastfmClient.failedToScrobble.add("Track: " + playbackItem.getTrack().track());*/
-              String msg = track.track() + track.artist() + "// REASON: Track not found, cannot scrobble. But trying even though..."; //Kai
+              String msg = track.track() + track.artist() + "// REASON: Track not found, cannot scrobble."; //Kai
               if(!track.track().equals("") && !track.artist().equals("") && !LastfmClient.failedToScrobble.contains(msg)){  //Kai
                 LastfmClient.failedToScrobble.add(msg);  //Kai
               }
