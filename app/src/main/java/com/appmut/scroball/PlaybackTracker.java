@@ -16,6 +16,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class PlaybackTracker {
 
@@ -54,7 +56,20 @@ public class PlaybackTracker {
     boolean switchTrackAndArtist = false;
     if(player.equals("com.hv.replaio")){  //Kai
       switchTrackAndArtist = true;
+
+      String title = metadata.getString(MediaMetadata.METADATA_KEY_TITLE);
+      //LastfmClient.failedToScrobble.add(metadata.getString(MediaMetadata.METADATA_KEY_ALBUM_ARTIST) + " AND " + artist);
+
+      //Kai: WDR2 zeigt manchmal im Wechsel zu den Metadaten des Songs Fußballergebnisse an... Daher hiermit rausfiltern:
+      Pattern p = Pattern.compile("(.)* [0-9]:[0-9]");
+      Matcher m = p.matcher(title);
+      if (m.matches()){
+        LastfmClient.failedToScrobble.add("A football score scrobble was avoided: " + title);
+        return;
+      }
     }
+
+
 
 
 
@@ -148,11 +163,18 @@ public class PlaybackTracker {
 
       track = metadataTransformers.transformForPackageName(player, Track.fromMediaMetadata(metadata));
 
+/*
+      if(track.track().equals("553534435")){  //Kai
+        return;
+      }*/
+
       if(switchTrackAndArtist){ //Kai
         Track.Builder builder = Track.builder().track(track.artist());
         builder.artist(track.track());
         track = builder.build();
       }
+
+
 
       if (!track.isValid()) {
         Log.v("IMP", "Oh no!"); //Kai

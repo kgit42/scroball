@@ -5,6 +5,7 @@ import com.google.common.base.Joiner;
 import com.appmut.scroball.Track;
 
 import java.util.Arrays;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class TitleExtractor implements MetadataTransform {
@@ -23,7 +24,9 @@ public class TitleExtractor implements MetadataTransform {
       int count = track.track().length() - track.track().replaceAll(separator,"").length(); //Kai: computes how many times the seperator occurs
       if(count > 1){  //Kai
         LastfmClient.failedToScrobble.add(track.track() + " // REASON: a seperator occured more than once");
-        break;
+        Track.Builder builder = Track.builder().track("");
+        builder.artist("");
+        return builder.build();
       }
       String[] components = track.track().split(Pattern.quote(separator));
 
@@ -53,11 +56,15 @@ public class TitleExtractor implements MetadataTransform {
     String title = null;
     String artist = null;
 
+
+
     for (String separator : SEPARATORS) {
-      int count = track.track().length() - track.artist().replaceAll(separator,"").length();//Kai: computes how many times the seperator occurs
+      int count = track.artist().length() - track.artist().replaceAll(separator,"").length();//Kai: computes how many times the seperator occurs
       if(count > 1){  //Kai
-        LastfmClient.failedToScrobble.add(track.track() + " // REASON: a seperator occured more than once");
-        break;
+        LastfmClient.failedToScrobble.add(track.artist() + " // REASON: a seperator occured more than once");
+        Track.Builder builder = Track.builder().track("");
+        builder.artist("");
+        return builder.build();
       }
       String[] components = track.artist().split(Pattern.quote(separator));
 
