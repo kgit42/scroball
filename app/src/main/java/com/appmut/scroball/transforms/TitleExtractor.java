@@ -3,6 +3,7 @@ package com.appmut.scroball.transforms;
 import com.appmut.scroball.LastfmClient;
 import com.google.common.base.Joiner;
 import com.appmut.scroball.Track;
+import com.raizlabs.android.dbflow.StringUtils;
 
 import java.util.Arrays;
 import java.util.regex.Matcher;
@@ -21,7 +22,7 @@ public class TitleExtractor implements MetadataTransform {
     String artist = null;
 
     for (String separator : SEPARATORS) {
-      int count = track.track().length() - track.track().replaceAll(separator,"").length(); //Kai: computes how many times the seperator occurs
+      int count = (track.artist().length() - track.artist().replace(separator,"").length()) / separator.length(); //Kai: computes how many times the seperator occurs
       if(count > 1){  //Kai
         LastfmClient.failedToScrobble.add(track.track() + " // REASON: a seperator occured more than once");
         Track.Builder builder = Track.builder().track("");
@@ -59,7 +60,7 @@ public class TitleExtractor implements MetadataTransform {
 
 
     for (String separator : SEPARATORS) {
-      int count = track.artist().length() - track.artist().replaceAll(separator,"").length();//Kai: computes how many times the seperator occurs
+      int count = (track.artist().length() - track.artist().replace(separator,"").length()) / separator.length();//Kai: computes how many times the seperator occurs
       if(count > 1){  //Kai
         LastfmClient.failedToScrobble.add(track.artist() + " // REASON: a seperator occured more than once");
         Track.Builder builder = Track.builder().track("");
