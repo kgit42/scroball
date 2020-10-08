@@ -39,6 +39,7 @@ public class LastfmClient {
   public static final int ERROR_SERVICE_OFFLINE = 11;
   public static final int ERROR_UNAUTHORIZED_TOKEN = 14;
   public static final int ERROR_SERVICE_TEMPORARILY_UNAVAILABLE = 16;
+  public static final int ERROR_RATE_LIMIT_EXCEEDED = 29;
 
   /**
    * The set of error codes which indicate transient errors, for which requests should be retried.
@@ -49,7 +50,8 @@ public class LastfmClient {
                   ERROR_UNKNOWN,
                   ERROR_OPERATION_FAILED,
                   ERROR_SERVICE_OFFLINE,
-                  ERROR_SERVICE_TEMPORARILY_UNAVAILABLE);
+                  ERROR_SERVICE_TEMPORARILY_UNAVAILABLE,
+                  ERROR_RATE_LIMIT_EXCEEDED);
 
   private static final String TAG = LastfmClient.class.getName();
   private static final String API_KEY = "17f6f4f55152871370780cd9c0761509";
