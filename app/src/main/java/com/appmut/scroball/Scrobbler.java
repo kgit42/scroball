@@ -187,6 +187,7 @@ Log.v("Wichtig", "newScrobbles: " + newScrobbles);  //Kai
       return;
     }
 
+
     Track track = playbackItem.getTrack();
     client.getTrackInfo(
         track,
@@ -472,8 +473,11 @@ Log.v("Wichtig", "newScrobbles: " + newScrobbles);  //Kai
   }
 
   private void queuePendingPlaybackItem(PlaybackItem playbackItem) {
-    pendingPlaybackItems.add(playbackItem);
-    scroballDB.writePendingPlaybackItem(playbackItem);
+    //if(!pendingPlaybackItems.contains(playbackItem)){ //Kai
+      pendingPlaybackItems.add(playbackItem);
+      scroballDB.writePendingPlaybackItem(playbackItem);
+    //}
+
   }
 
   @Subscribe

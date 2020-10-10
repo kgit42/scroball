@@ -3,6 +3,7 @@ package com.appmut.scroball;
 import android.app.Application;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.PowerManager;
 import android.preference.PreferenceManager;
 
 import com.google.common.eventbus.EventBus;
@@ -46,6 +47,7 @@ public class ScroballApplication extends Application {
       lastfmClient = new LastfmClient(api, caller, userAgent);
     }
 
+
     scroballDB = new ScroballDB();
     eventBus.register(this);
   }
@@ -55,6 +57,7 @@ public class ScroballApplication extends Application {
       startService(new Intent(this, ListenerService.class));
     }
   }
+
 
   public void stopListenerService() {
     stopService(new Intent(this, ListenerService.class));

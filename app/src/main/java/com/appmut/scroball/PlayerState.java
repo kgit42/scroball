@@ -1,6 +1,7 @@
 package com.appmut.scroball;
 
 import android.media.session.PlaybackState;
+import android.os.PowerManager;
 import android.util.Log;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
@@ -19,11 +20,17 @@ public class PlayerState {
   private PlaybackItem playbackItem;
   private Timer submissionTimer;
 
+  public boolean isPaused; //Kai
+
+  public PowerManager.WakeLock wakeLock;  //Kai
+
   public PlayerState(
-      String player, Scrobbler scrobbler, ScrobbleNotificationManager notificationManager) {
+          String player, Scrobbler scrobbler, ScrobbleNotificationManager notificationManager, PowerManager.WakeLock wakeLock) {
     this.player = player;
     this.scrobbler = scrobbler;
     this.notificationManager = notificationManager;
+    this.wakeLock = wakeLock; //Kai
+    this.isPaused = false;  //Kai
     eventBus.register(this);
   }
 
@@ -43,10 +50,15 @@ public class PlayerState {
       playbackItem.startPlaying();
       notificationManager.updateNowPlaying(playbackItem.getTrack());
       scheduleSubmission();
+      isPaused = false; //Kai
     } else {
       if(PlaybackTracker.scheduledFuture != null) {
         PlaybackTracker.scheduledFuture.cancel(false);  //Kai
         PlaybackTracker.pollingTaskRunning = false; //Kai
+        if (wakeLock.isHeld()){
+          wakeLock.release();
+        }
+        isPaused = true;  //Kai
       }
 
 

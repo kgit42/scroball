@@ -9,6 +9,7 @@ import android.media.session.MediaController;
 import android.media.session.MediaSessionManager;
 import android.media.session.PlaybackState;
 import android.net.ConnectivityManager;
+import android.os.PowerManager;
 import android.service.notification.NotificationListenerService;
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationManagerCompat;
@@ -38,6 +39,9 @@ public class ListenerService extends NotificationListenerService
   private PlaybackTracker playbackTracker;
   private SharedPreferences sharedPreferences;
 
+  private PowerManager powerManager; //Kai
+  private PowerManager.WakeLock wakeLock; //Kai
+
   @Override
   public void onCreate() {
     ScroballApplication application = (ScroballApplication) getApplication();
@@ -54,7 +58,12 @@ public class ListenerService extends NotificationListenerService
         new Scrobbler(
             lastfmClient, scrobbleNotificationManager, scroballDB, connectivityManager, trackLover);
 
-    playbackTracker = new PlaybackTracker(scrobbleNotificationManager, scrobbler);
+    powerManager = (PowerManager) getSystemService(POWER_SERVICE); //Kai
+    wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MyApp::MyWakelockTag");  //Kai
+
+    playbackTracker = new PlaybackTracker(scrobbleNotificationManager, scrobbler, wakeLock);
+
+
 
     Log.d(TAG, "NotificationListenerService started");
 

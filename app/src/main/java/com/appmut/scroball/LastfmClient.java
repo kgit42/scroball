@@ -5,6 +5,8 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import androidx.annotation.NonNull;
+
+import android.os.PowerManager;
 import android.util.Log;
 
 import com.appmut.scroball.ui.ScrobbleIdentifier;
@@ -39,7 +41,12 @@ public class LastfmClient {
   public static final int ERROR_SERVICE_OFFLINE = 11;
   public static final int ERROR_UNAUTHORIZED_TOKEN = 14;
   public static final int ERROR_SERVICE_TEMPORARILY_UNAVAILABLE = 16;
-  public static final int ERROR_RATE_LIMIT_EXCEEDED = 29;
+  public static final int ERROR_RATE_LIMIT_EXCEEDED = 29;   //Kai
+
+  public static final long cooldown = 5 * 1000; //Kai: Die App stellt zu viele getInfo Anfragen, die irgendwann dazu führen, dass man bei LastFM gesperrt wird temporär.
+  public static long cooldownStart = 0; //Kai
+
+
 
   /**
    * The set of error codes which indicate transient errors, for which requests should be retried.
@@ -51,7 +58,7 @@ public class LastfmClient {
                   ERROR_OPERATION_FAILED,
                   ERROR_SERVICE_OFFLINE,
                   ERROR_SERVICE_TEMPORARILY_UNAVAILABLE,
-                  ERROR_RATE_LIMIT_EXCEEDED);
+                  ERROR_RATE_LIMIT_EXCEEDED);   //Kai
 
   private static final String TAG = LastfmClient.class.getName();
   private static final String API_KEY = "17f6f4f55152871370780cd9c0761509";
@@ -153,6 +160,12 @@ public class LastfmClient {
    */
   public void scrobbleTracks(List<Scrobble> scrobbles, Handler.Callback callback) {
     isScrobbleTaskBlocked = true; //Kai
+
+    /*
+    for (Scrobble s:scrobbles) {  //Kai
+      failedToScrobble.add("Scrobble try 0: " + s.track().track() + " " + s.track().artist());
+    }
+*/
 
     //int numberOfFakeSuccess = 0;
     ArrayList<String> doubleScrobblesChecker = new ArrayList<String>(); //Kai: diese Liste prüft, ob die Scrobbles, die der Methode hier als param übergeben werden, gleiche enthalten: verhindern, dass, wenn ein Lied fälschlicherweise länger da steht als es lang ist, es 2x gescrobbelt wird
@@ -266,6 +279,13 @@ public class LastfmClient {
   }
 
   public void getTrackInfo(com.appmut.scroball.Track track, Handler.Callback callback) {
+    if(Math.abs(System.currentTimeMillis() - cooldownStart) < cooldown){    //Kai
+      return;
+    }
+
+    cooldownStart = System.currentTimeMillis();
+
+
     new GetTrackInfoTask(session, callback).execute(track);
   }
 
@@ -498,7 +518,15 @@ public class LastfmClient {
       if(params != null){
         try {
 
+
+          for (ScrobbleData s:params) {   //Kai
+            failedToScrobble.add("Scrobble try: " + s.getTrack() + " " + s.getArtist());
+          }
+
+
           List<ScrobbleResult> results = api.scrobble(ImmutableList.copyOf(params), session);
+          //List<ScrobbleResult> results = new ArrayList<ScrobbleResult>();    //Kai
+
           ImmutableList.Builder<Result> builder = ImmutableList.builder();
 
           for (ScrobbleResult result : results) {
@@ -586,6 +614,11 @@ public class LastfmClient {
     @Override
     protected Track doInBackground(com.appmut.scroball.Track... params) {
       track = params[0];
+
+        //Kai
+        failedToScrobble.add("Track info try: " + track.track() + " " + track.artist());
+
+
       try {
         return Track.getInfo(track.artist(), track.track(), session.getApiKey());
       } catch (CallException e) {

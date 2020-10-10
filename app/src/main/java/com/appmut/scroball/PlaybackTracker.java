@@ -1,7 +1,9 @@
 package com.appmut.scroball;
 
+import android.content.Context;
 import android.media.MediaMetadata;
 import android.media.session.PlaybackState;
+import android.os.PowerManager;
 import android.util.Log;
 
 import com.appmut.scroball.transforms.MetadataTransformers;
@@ -32,10 +34,17 @@ public class PlaybackTracker {
   public static ScheduledFuture scheduledFuture = null;
   public static boolean pollingTaskRunning = false; //Kai
 
+  public PowerManager.WakeLock wakeLock; //Kai
+
+
+
+
+
   public PlaybackTracker(
-      ScrobbleNotificationManager scrobbleNotificationManager, Scrobbler scrobbler) {
+      ScrobbleNotificationManager scrobbleNotificationManager, Scrobbler scrobbler, PowerManager.WakeLock wakeLock) {
     this.scrobbleNotificationManager = scrobbleNotificationManager;
     this.scrobbler = scrobbler;
+    this.wakeLock = wakeLock;
   }
 
   public void handlePlaybackStateChange(String player, PlaybackState playbackState) {
@@ -52,7 +61,9 @@ public class PlaybackTracker {
       return;
     }
 
-    Log.v("WICHTIG!", "Player: " + player); //Kai
+
+
+    //Log.v("WICHTIG!", "Player: " + player); //Kai
     boolean switchTrackAndArtist = false;
     if(player.equals("com.hv.replaio")){  //Kai
       switchTrackAndArtist = true;
@@ -69,17 +80,45 @@ public class PlaybackTracker {
       }
     }
 
+    PlayerState playerState = getOrCreatePlayerState(player);   //Kai
+    if(playerState.isPaused){
+      PlaybackTracker.pollingTaskRunning = false;
+      if (wakeLock.isHeld()){
+        wakeLock.release();
+      }
+      if(PlaybackTracker.scheduledFuture != null){
+        PlaybackTracker.scheduledFuture.cancel(false);
+      }
+
+    }
+
 
 
 
 
     if (metadata.getString(MediaMetadata.METADATA_KEY_TITLE).equals("1LIVE") && !PlaybackTracker.pollingTaskRunning) {   //Kai: Task um von 1LIVE die Metadaten abzugreifen
 
+      wakeLock.acquire();
       PlaybackTracker.pollingTaskRunning = true;
       ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
       PlaybackTracker.scheduledFuture = scheduler.scheduleAtFixedRate(new Thread() {
         public void run() {
           try {
+
+            PlayerState playerState = getOrCreatePlayerState(player);
+            if(playerState.isPaused){
+              PlaybackTracker.pollingTaskRunning = false;
+              if (wakeLock.isHeld()){
+                wakeLock.release();
+              }
+              if(PlaybackTracker.scheduledFuture != null){
+                PlaybackTracker.scheduledFuture.cancel(false);
+              }
+
+            }
+
+
+            Log.v("WICHTIG!", "Start of 1LIVE Polling");
 
             Track track = null;
 
@@ -100,9 +139,9 @@ public class PlaybackTracker {
 
             String title = currentTrack.getString("title");
             String newTitle = "";
-            if(title.endsWith("*")){
+            if (title.endsWith("*")) {
               newTitle = title.substring(0, title.length() - 1);
-            }else{
+            } else {
               newTitle = title;
             }
             String artist = currentTrack.getString("artist");
@@ -114,15 +153,15 @@ public class PlaybackTracker {
             long durationSong = seconds + 60 * minutes;
 
             Long endTime = currentTrack.getLong("timestamp") / 1000 + durationSong - 15;
-            Log.v("WICHTIG!", String.valueOf(endTime));
-            Log.v("WICHTIG!", String.valueOf(System.currentTimeMillis() / 1000));
-            Log.v("WICHTIG!", Boolean.toString((System.currentTimeMillis() / 1000) < endTime));
-            if((System.currentTimeMillis() / 1000) < endTime){    //Kai: nur neuen Track setzen, wenn Song nicht schon um ist
+            //Log.v("WICHTIG!", String.valueOf(endTime));
+            //Log.v("WICHTIG!", String.valueOf(System.currentTimeMillis() / 1000));
+            //Log.v("WICHTIG!", Boolean.toString((System.currentTimeMillis() / 1000) < endTime));
+            if ((System.currentTimeMillis() / 1000) < endTime) {    //Kai: nur neuen Track setzen, wenn Song nicht schon um ist
               Track.Builder builder = Track.builder().track(newTitle);
               builder.artist(artist);
               track = builder.build();
               Log.v("WICHTIG!", newTitle + artist);
-            }else{
+            } else {
               Track.Builder builder = Track.builder().track("");
               builder.artist("");
               track = builder.build();
@@ -132,16 +171,16 @@ public class PlaybackTracker {
             if (!track.isValid()) {
               Log.v("IMP", "Oh no!"); //Kai
               //LastfmClient.failedToScrobble.add(Long.toString(System.currentTimeMillis() - lastMetadataChangePermitted)); //Kai
-              if(Math.abs(System.currentTimeMillis() - lastMetadataChangePermitted) < REPROCESS_THRESHOLD ){  //Kai
+              if (Math.abs(System.currentTimeMillis() - lastMetadataChangePermitted) < REPROCESS_THRESHOLD) {  //Kai
 
-              }else{
+              } else {
                 lastMetadataChangePermitted = System.currentTimeMillis(); //Kai
-                PlayerState playerState = getOrCreatePlayerState(player);
+                playerState = getOrCreatePlayerState(player);
                 playerState.setTrack(track);
               }
-            }else{
+            } else {
               lastMetadataChangePermitted = System.currentTimeMillis(); //Kai
-              PlayerState playerState = getOrCreatePlayerState(player);
+              playerState = getOrCreatePlayerState(player);
               playerState.setTrack(track);
             }
 
@@ -152,6 +191,8 @@ public class PlaybackTracker {
         }
       }, 0, 20, TimeUnit.SECONDS);
 
+    }else if(metadata.getString(MediaMetadata.METADATA_KEY_TITLE).equals("1LIVE")){
+      return;
     }else {
 
       Track track = null;
@@ -159,6 +200,9 @@ public class PlaybackTracker {
       if(PlaybackTracker.pollingTaskRunning && scheduledFuture != null) {     //Kai
         PlaybackTracker.scheduledFuture.cancel(false);
         PlaybackTracker.pollingTaskRunning = false;
+        if (wakeLock.isHeld()){
+          wakeLock.release();
+        }
       }
 
       track = metadataTransformers.transformForPackageName(player, Track.fromMediaMetadata(metadata));
@@ -189,7 +233,7 @@ public class PlaybackTracker {
 
       lastMetadataChangePermitted = System.currentTimeMillis(); //Kai
 
-      PlayerState playerState = getOrCreatePlayerState(player);
+      playerState = getOrCreatePlayerState(player);
       playerState.setTrack(track);
     }
 
@@ -216,10 +260,11 @@ public class PlaybackTracker {
     PlayerState playerState = playerStates.get(player);
 
     if (!playerStates.containsKey(player)) {
-      playerState = new PlayerState(player, scrobbler, scrobbleNotificationManager);
+      playerState = new PlayerState(player, scrobbler, scrobbleNotificationManager, wakeLock);
       playerStates.put(player, playerState);
     }
 
     return playerState;
   }
+
 }
