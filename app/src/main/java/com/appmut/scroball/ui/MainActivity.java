@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import com.appmut.scroball.LastfmClient;
+import com.appmut.scroball.PlaybackTracker;
 import com.google.android.material.tabs.TabLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -17,6 +18,8 @@ import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import android.os.PowerManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -217,7 +220,7 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
       textview1.setText(LastfmClient.getLastScrobbledTracks());
 
       TextView textview2 = (TextView) findViewById(R.id.counterBox);
-      textview2.setText(Boolean.toString(LastfmClient.isScrobbleTaskBlocked));
+      textview2.setText("isScrobbleTaskBlocked: " + Boolean.toString(LastfmClient.isScrobbleTaskBlocked) + ", isPollingTaskRunning: " + Boolean.toString(PlaybackTracker.pollingTaskRunning));
 
       TextView textview3 = (TextView) findViewById(R.id.logBox2);
       textview3.setText(LastfmClient.getLastXScrobbledTracks());
