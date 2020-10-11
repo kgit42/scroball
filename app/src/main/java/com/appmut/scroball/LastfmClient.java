@@ -76,6 +76,7 @@ public class LastfmClient {
   public static boolean isScrobbleTaskBlocked = false; //Kai
   public static final int TIMESTAMP_THRESHOLD = 300;  //Kai
   public static ArrayList<String> failedToScrobble = new ArrayList<String>(); //Kai
+  public static ArrayList<String> loglog = new ArrayList<String>(); //Kai
   //public static int myThreadCounter = 0;  //Kai
   public static int counter = 0;  //Kai
 
@@ -271,6 +272,18 @@ public class LastfmClient {
     try {
       for (int j = 0; j < failedToScrobble.size(); j++) {
         s = s.concat(failedToScrobble.get(j) + "\n" + "\n");
+      }
+    }catch(Exception e){
+      s.concat(e.getMessage());
+    }
+    return s;
+  }
+
+  public static String getLoglog(){ //Kai
+    String s = new String();
+    try {
+      for (int j = 0; j < loglog.size(); j++) {
+        s = s.concat(loglog.get(j) + "\n" + "\n");
       }
     }catch(Exception e){
       s.concat(e.getMessage());
@@ -520,7 +533,7 @@ public class LastfmClient {
 
 
           for (ScrobbleData s:params) {   //Kai
-            failedToScrobble.add("Scrobble try: " + s.getTrack() + " " + s.getArtist());
+            loglog.add("Scrobble try: " + s.getTrack() + " " + s.getArtist());
           }
 
 
@@ -616,7 +629,7 @@ public class LastfmClient {
       track = params[0];
 
         //Kai
-        failedToScrobble.add("Track info try: " + track.track() + " " + track.artist());
+        loglog.add("Track info try: " + track.track() + " " + track.artist());
 
 
       try {

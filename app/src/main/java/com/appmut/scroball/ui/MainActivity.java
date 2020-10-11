@@ -43,6 +43,8 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
   public static final int TAB_NOW_PLAYING = 0;
   public static final int TAB_SCROBBLE_HISTORY = 1;
 
+  public static final int TAB_DEBUG = 2; //Kai
+
   private static final String REMOVE_ADS_SKU = "remove_ads";
 
   private ScroballApplication application;
@@ -83,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
     tabLayout.setupWithViewPager(mViewPager);
 
     // Initial tab may have been specified in the intent.
-    int initialTab = getIntent().getIntExtra(EXTRA_INITIAL_TAB, TAB_NOW_PLAYING);
+    int initialTab = getIntent().getIntExtra(EXTRA_INITIAL_TAB, TAB_DEBUG);
     mViewPager.setCurrentItem(initialTab);
 
     this.adsRemoved = application.getSharedPreferences().getBoolean(REMOVE_ADS_SKU, false);
@@ -223,6 +225,9 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
       TextView textview4 = (TextView) findViewById(R.id.logBoxErrors);
       textview4.setText(LastfmClient.getFailedToScrobble());
 
+      TextView textview5 = (TextView) findViewById(R.id.logBoxlog);
+      textview5.setText(LastfmClient.getLoglog());
+
 
 
 
@@ -258,9 +263,9 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
     return dialog;
   }*/
 
-    public void toFalseButton(View view) { //Kai
-      LastfmClient.isScrobbleTaskBlocked = false;
-    } //Kai
+    //public void toFalseButton(View view) { //Kai
+      //LastfmClient.isScrobbleTaskBlocked = false;
+    //} //Kai
 
     /**
    * A {@link FragmentPagerAdapter} that returns a fragment corresponding to one of the
@@ -269,7 +274,7 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
   public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     List<Fragment> fragments =
-        ImmutableList.of(new NowPlayingFragment(), new ScrobbleHistoryFragment());
+        ImmutableList.of(new NowPlayingFragment(), new ScrobbleHistoryFragment(), new DebugFragment());
 
     public SectionsPagerAdapter(FragmentManager fm) {
       super(fm);
@@ -294,6 +299,8 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
           return getString(R.string.tab_now_playing);
         case 1:
           return getString(R.string.tab_history);
+        case 2:
+          return "Debug"; //Kai
       }
       return null;
     }
