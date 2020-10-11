@@ -236,6 +236,8 @@ Log.v("Wichtig", "newScrobbles: " + newScrobbles);  //Kai
           playbackItem.updateTrack(updatedTrack);
           Log.d(TAG, String.format("Track info updated: %s", playbackItem));
 
+          LastfmClient.loglog.add("TRACK INFO UPDATED: " + updatedTrack.track() + " " + updatedTrack.artist()); //Kai
+
           submit(playbackItem, false);
           return true;
         });

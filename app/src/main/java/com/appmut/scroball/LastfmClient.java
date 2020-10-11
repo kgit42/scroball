@@ -18,6 +18,8 @@ import com.google.common.collect.ImmutableSet;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.softartdev.lastfm.CallException;
 import com.softartdev.lastfm.Caller;
@@ -643,17 +645,18 @@ public class LastfmClient {
     @Override
     protected void onPostExecute(Track updatedTrack) {
       Message message = Message.obtain();
+      loglog.add("UPDATED TRACK: " + updatedTrack); //Kai
 
       if (updatedTrack != null) {
         com.appmut.scroball.Track.Builder builder =
             com.appmut.scroball.Track.builder()
-                .artist(track.artist())
-                .track(track.track())
+                .artist(updatedTrack.getArtist())   //Kai: hier und bei track stand vorher 'track' statt 'updatedTrack'. Dadurch wurde korrigierte Version nicht übernommen
+                .track(updatedTrack.getName())
                 .duration(updatedTrack.getDuration() * 1000);
 
-        if (track.album().isPresent()) {
+        /*if (track.album().isPresent()) {
           builder.album(track.album().get());
-        } else if (updatedTrack.getAlbum() != null) {
+        } else */if (updatedTrack.getAlbum() != null) {
           builder.album(updatedTrack.getAlbum());
         }
         message.obj = builder.build();
