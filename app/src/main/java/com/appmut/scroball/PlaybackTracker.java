@@ -81,7 +81,10 @@ public class PlaybackTracker {
     }
 
     PlayerState playerState = getOrCreatePlayerState(player);   //Kai
+
+    /*
     if(playerState.isPaused){
+      LastfmClient.loglog.add("polling Task stopped: isPaused");
       PlaybackTracker.pollingTaskRunning = false;
       if (wakeLock.isHeld()){
         wakeLock.release();
@@ -90,14 +93,14 @@ public class PlaybackTracker {
         PlaybackTracker.scheduledFuture.cancel(false);
       }
 
-    }
+    }*/
 
 
 
 
 
-    if (metadata.getString(MediaMetadata.METADATA_KEY_TITLE).equals("1LIVE") && !PlaybackTracker.pollingTaskRunning) {   //Kai: Task um von 1LIVE die Metadaten abzugreifen
-
+    if (metadata.getString(MediaMetadata.METADATA_KEY_TITLE).equals("1LIVE") && !PlaybackTracker.pollingTaskRunning && !playerState.isPaused) {   //Kai: Task um von 1LIVE die Metadaten abzugreifen
+      //playerState.pollingTask();  //Kai
       wakeLock.acquire();
       PlaybackTracker.pollingTaskRunning = true;
       ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
@@ -107,6 +110,7 @@ public class PlaybackTracker {
 
             PlayerState playerState = getOrCreatePlayerState(player);
             if(playerState.isPaused){
+              LastfmClient.loglog.add("polling Task stopped: isPaused");
               PlaybackTracker.pollingTaskRunning = false;
               if (wakeLock.isHeld()){
                 wakeLock.release();
@@ -191,15 +195,18 @@ public class PlaybackTracker {
         }
       }, 0, 20, TimeUnit.SECONDS);
 
-    }else if(metadata.getString(MediaMetadata.METADATA_KEY_TITLE).equals("1LIVE")){
+
+    }else if(metadata.getString(MediaMetadata.METADATA_KEY_TITLE).equals("1LIVE") && !playerState.isPaused){
       return;
-    }else {
+    }else if(!playerState.isPaused) {
 
       Track track = null;
+
 
       if(PlaybackTracker.pollingTaskRunning && scheduledFuture != null) {     //Kai
         PlaybackTracker.scheduledFuture.cancel(false);
         PlaybackTracker.pollingTaskRunning = false;
+        LastfmClient.loglog.add("polling Task stopped: new metadata: " + MediaMetadata.METADATA_KEY_TITLE);
         if (wakeLock.isHeld()){
           wakeLock.release();
         }
@@ -267,4 +274,10 @@ public class PlaybackTracker {
     return playerState;
   }
 
+  public static void pollingTask(){
+
+  }
+
 }
+
+

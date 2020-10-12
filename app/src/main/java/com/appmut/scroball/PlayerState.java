@@ -51,9 +51,11 @@ public class PlayerState {
       notificationManager.updateNowPlaying(playbackItem.getTrack());
       scheduleSubmission();
       isPaused = false; //Kai
+
     } else {
       if(PlaybackTracker.scheduledFuture != null) {
         PlaybackTracker.scheduledFuture.cancel(false);  //Kai
+        LastfmClient.loglog.add("polling Task stopped: isPaused");
         PlaybackTracker.pollingTaskRunning = false; //Kai
         if (wakeLock.isHeld()){
           wakeLock.release();

@@ -249,10 +249,10 @@ public class LastfmClient {
     String s = new String();
     try {
       for (int j = 0; j < lastScrobbledTracks.size(); j++) {
-        s = s.concat(lastScrobbledTracks.get(j).toString() + "\n" + "\n");
+        s = lastScrobbledTracks.get(j).toString() + "\n" + "\n" + s;
       }
     }catch(Exception e){
-      s.concat(e.getMessage());
+      s = (e.getMessage()) + s;
     }
     return s;
   }
@@ -261,10 +261,10 @@ public class LastfmClient {
     String s = new String();
     try {
       for (int j = 0; j < lastXScrobbledTracks.size(); j++) {
-        s = s.concat(lastXScrobbledTracks.get(j) + "\n");
+        s = (lastXScrobbledTracks.get(j) + "\n") + s;
       }
     }catch(Exception e){
-      s.concat(e.getMessage());
+      s = (e.getMessage() + s);
     }
     return s;
   }
@@ -273,10 +273,10 @@ public class LastfmClient {
     String s = new String();
     try {
       for (int j = 0; j < failedToScrobble.size(); j++) {
-        s = s.concat(failedToScrobble.get(j) + "\n" + "\n");
+        s = (failedToScrobble.get(j) + "\n" + "\n") + s;
       }
     }catch(Exception e){
-      s.concat(e.getMessage());
+      s = (e.getMessage()) + s;
     }
     return s;
   }
@@ -285,10 +285,10 @@ public class LastfmClient {
     String s = new String();
     try {
       for (int j = 0; j < loglog.size(); j++) {
-        s = s.concat(loglog.get(j) + "\n" + "\n");
+        s = (loglog.get(j) + "\n" + "\n") + s;
       }
     }catch(Exception e){
-      s.concat(e.getMessage());
+      s = (e.getMessage()) + s;
     }
     return s;
   }
