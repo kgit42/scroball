@@ -25,6 +25,8 @@ public class PlayerState {
 
   public PowerManager.WakeLock wakeLock;  //Kai
 
+  private String lastMetadataTitle;  //Kai
+
   public PlayerState(
           String player, Scrobbler scrobbler, ScrobbleNotificationManager notificationManager, PowerManager.WakeLock wakeLock, PlaybackTracker playbackTracker) {
     this.player = player;
@@ -33,6 +35,7 @@ public class PlayerState {
     this.wakeLock = wakeLock; //Kai
     this.isPaused = false;  //Kai
     this.playbackTracker = playbackTracker; //Kai
+    this.lastMetadataTitle = "";  //Kai
     eventBus.register(this);
   }
 
@@ -149,6 +152,14 @@ public class PlayerState {
 
   private void postEvent(Track track) {
     eventBus.post(NowPlayingChangeEvent.builder().track(track).source(player).build());
+  }
+
+  public void setLastMetadataTitle(String s){ //Kai
+    lastMetadataTitle = s;
+  }
+
+  public String getLastMetadataTitle(){ //Kai
+    return lastMetadataTitle;
   }
 
   @Subscribe

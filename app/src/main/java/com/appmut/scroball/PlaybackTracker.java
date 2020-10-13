@@ -35,7 +35,7 @@ public class PlaybackTracker {
     public static boolean pollingTaskRunning = false; //Kai
 
     public PowerManager.WakeLock wakeLock; //Kai
-    public static String lastMetaDataTitle = "";  //Kai
+    //public static String lastMetaDataTitle = "";  //Kai
     public static String activePlayer = "";
 
 
@@ -58,7 +58,9 @@ public class PlaybackTracker {
 
     public void handleMetadataChange(String player, MediaMetadata metadata) {
         Log.v("WICHTIG!", "Metadata Change: " + player + metadata);
-        lastMetaDataTitle = metadata.getString(MediaMetadata.METADATA_KEY_TITLE);  //Kai
+        PlayerState playerState = getOrCreatePlayerState(player);   //Kai
+
+        playerState.setLastMetadataTitle(metadata.getString(MediaMetadata.METADATA_KEY_TITLE));  //Kai
 
         if (metadata == null) {
             return;
@@ -82,7 +84,7 @@ public class PlaybackTracker {
             }
         }
 
-        PlayerState playerState = getOrCreatePlayerState(player);   //Kai
+
 
     /*
     if(playerState.isPaused){
@@ -96,8 +98,8 @@ public class PlaybackTracker {
       }
 
     }*/
-        Log.v("WICHTIG!", "1LIVE if condition: " + lastMetaDataTitle + !PlaybackTracker.pollingTaskRunning + !playerState.isPaused);
-        if (lastMetaDataTitle.equals("WDR - 1Live") && !PlaybackTracker.pollingTaskRunning && !playerState.isPaused) {   //Kai: Task um von 1LIVE die Metadaten abzugreifen
+        Log.v("WICHTIG!", "1LIVE if condition: " + playerState.getLastMetadataTitle() + !PlaybackTracker.pollingTaskRunning + !playerState.isPaused);
+        if (playerState.getLastMetadataTitle().equals("WDR - 1Live") && !PlaybackTracker.pollingTaskRunning && !playerState.isPaused) {   //Kai: Task um von 1LIVE die Metadaten abzugreifen
             pollingTask(player);  //Kai
         }
 
@@ -182,7 +184,7 @@ public class PlaybackTracker {
             PlayerState playerState = getOrCreatePlayerState(player);
         //LastfmClient.loglog.add(lastMetaDataTitle + ", " + PlaybackTracker.pollingTaskRunning + ", " + !playerState.isPaused);
 
-        if (lastMetaDataTitle.equals("WDR - 1Live") && !PlaybackTracker.pollingTaskRunning && !playerState.isPaused) {
+        if (playerState.getLastMetadataTitle().equals("WDR - 1Live") && !PlaybackTracker.pollingTaskRunning && !playerState.isPaused) {
             wakeLock.acquire();
             PlaybackTracker.pollingTaskRunning = true;
             ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
@@ -277,7 +279,6 @@ public class PlaybackTracker {
                 }
             }, 0, 20, TimeUnit.SECONDS);
 
-            return;
         }
 
 
