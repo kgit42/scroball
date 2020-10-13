@@ -69,7 +69,7 @@ public abstract class Track implements Serializable {
 
     }
 
-    if(title.equals("1LIVE")){  //Kai: 1LIVE soll gar nicht über die Notification gescrobbelt werden, sondern über die Website
+    if(title.equals("WDR - 1Live")){  //Kai: 1LIVE soll gar nicht über die Notification gescrobbelt werden, sondern über die Website
       Track.Builder builder = Track.builder().track("");
       builder.artist("");
       return builder.build();
@@ -83,11 +83,14 @@ public abstract class Track implements Serializable {
       }
     }
 
-    if(artist.contains("WDR 2")){  //Kai
-      Track.Builder builder = Track.builder().track("");
-      builder.artist("");
-      return builder.build();
+    if(artist != null) {
+      if(artist.contains("WDR 2")){  //Kai
+        Track.Builder builder = Track.builder().track("");
+        builder.artist("");
+        return builder.build();
+      }
     }
+
 
 
     if (art == null) {

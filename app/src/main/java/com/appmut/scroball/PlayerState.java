@@ -21,53 +21,69 @@ public class PlayerState {
   private Timer submissionTimer;
 
   public boolean isPaused; //Kai
+  public PlaybackTracker playbackTracker; //Kai
 
   public PowerManager.WakeLock wakeLock;  //Kai
 
   public PlayerState(
-          String player, Scrobbler scrobbler, ScrobbleNotificationManager notificationManager, PowerManager.WakeLock wakeLock) {
+          String player, Scrobbler scrobbler, ScrobbleNotificationManager notificationManager, PowerManager.WakeLock wakeLock, PlaybackTracker playbackTracker) {
     this.player = player;
     this.scrobbler = scrobbler;
     this.notificationManager = notificationManager;
     this.wakeLock = wakeLock; //Kai
     this.isPaused = false;  //Kai
+    this.playbackTracker = playbackTracker; //Kai
     eventBus.register(this);
   }
 
   public void setPlaybackState(PlaybackState playbackState) {
+    int state = playbackState.getState();
+    boolean isPlaying = state == PlaybackState.STATE_PLAYING;
+
+    if(isPlaying){
+      isPaused = false; //Kai
+      LastfmClient.loglog.add("isPaused = false: " + player);  //Kai
+    }else{
+      isPaused = true;  //Kai
+      LastfmClient.loglog.add("isPaused = true: " + player);  //Kai
+
+    }
+
+
+
     if (playbackItem == null) {
       return;
+
     }
 
     playbackItem.updateAmountPlayed();
 
-    int state = playbackState.getState();
-    boolean isPlaying = state == PlaybackState.STATE_PLAYING;
 
     if (isPlaying) {
       Log.d(TAG, "Track playing");
+      PlaybackTracker.activePlayer = player;  //Kai
       postEvent(playbackItem.getTrack());
       playbackItem.startPlaying();
       notificationManager.updateNowPlaying(playbackItem.getTrack());
       scheduleSubmission();
-      isPaused = false; //Kai
 
+      playbackTracker.pollingTask(player);   //Kai: manchmal ist 1LIVE Polling Task beendet worden durch angebliche Pause. Wenn wieder Play soll er wieder starten.
     } else {
-      if(PlaybackTracker.scheduledFuture != null) {
+      /*if(PlaybackTracker.scheduledFuture != null) {
         PlaybackTracker.scheduledFuture.cancel(false);  //Kai
         LastfmClient.loglog.add("polling Task stopped: isPaused");
         PlaybackTracker.pollingTaskRunning = false; //Kai
         if (wakeLock.isHeld()){
           wakeLock.release();
         }
-        isPaused = true;  //Kai
-      }
-
-
+*/
       Log.d(TAG, String.format("Track paused (state %d)", state));
       postEvent(Track.empty());
       playbackItem.stopPlaying();
-      notificationManager.removeNowPlaying();
+      if(PlaybackTracker.activePlayer.equals(player)){ //Kai: Benachrichtigung soll nur bei "echter" Pause erfolgen, nicht wenn z. B. das System erst Play bei Player 1 und DANACH Pause bei Player 2 sendet.
+        notificationManager.removeNowPlaying();
+      }
+
       scrobbler.submit(playbackItem, false);
     }
   }
