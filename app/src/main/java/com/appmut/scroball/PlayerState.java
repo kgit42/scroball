@@ -92,7 +92,7 @@ public class PlayerState {
 
       }*/
 
-      //return;
+      //return; //Kai: soll nicht returnen
     }
 
     playbackItem.updateAmountPlayed();
