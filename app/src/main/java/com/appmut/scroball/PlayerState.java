@@ -1,6 +1,7 @@
 package com.appmut.scroball;
 
 import android.media.session.PlaybackState;
+import android.os.Handler;
 import android.os.PowerManager;
 import android.util.Log;
 import com.google.common.eventbus.EventBus;
@@ -19,6 +20,8 @@ public class PlayerState {
   private final EventBus eventBus = ScroballApplication.getEventBus();
   private PlaybackItem playbackItem;
   private Timer submissionTimer;
+
+  private boolean tryAgainDone = false; //Kai
 
   public boolean isPaused; //Kai
   public PlaybackTracker playbackTracker; //Kai
@@ -55,14 +58,48 @@ public class PlayerState {
 
 
     if (playbackItem == null) {
-      return;
+      Track.Builder builder = Track.builder().track("NULL");
+      builder.artist("NULL");
+      Track t = builder.build();
+      playbackItem = new PlaybackItem(t, -1);
 
+      /*Timer tryAgainTimer = new Timer();  //Kai
+      tryAgainTimer.schedule(
+              new TimerTask() {
+                @Override
+                public void run() {
+                  setPlaybackState(playbackState);
+                }
+              },
+              5 * 1000);*/
+
+      /*
+      if(tryAgainDone == false){    //Kai
+        LastfmClient.loglog.add("Try again to trigger is playing now");
+        Handler handler = new Handler();
+        tryAgainDone = true;
+        Runnable runnableCode = new Runnable() {
+          @Override
+          public void run() {
+            // Do something here on the main thread
+            Log.d("Handlers", "Called on main thread");
+            setPlaybackState(playbackState);    //nochmal probieren
+          }
+        };
+
+        handler.postDelayed(runnableCode, 3000);
+
+
+      }*/
+
+      //return;
     }
 
     playbackItem.updateAmountPlayed();
 
 
     if (isPlaying) {
+      //tryAgainDone = false; //Kai
       Log.d(TAG, "Track playing");
       PlaybackTracker.activePlayer = player;  //Kai
       postEvent(playbackItem.getTrack());
