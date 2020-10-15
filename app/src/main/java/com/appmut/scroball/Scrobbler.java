@@ -198,6 +198,9 @@ Log.v("Wichtig", "newScrobbles: " + newScrobbles);  //Kai
 
             if (result != null) {
               errorCode = result.getErrorCode();
+              //LastfmClient.failedToScrobble.add("Error code: " + errorCode); //Kai
+            }else{
+              //LastfmClient.failedToScrobble.add("Result null"); //Kai
             }
             if (errorCode == 6) {
               Log.d(TAG, "Track not found, cannot scrobble.");
@@ -214,7 +217,7 @@ Log.v("Wichtig", "newScrobbles: " + newScrobbles);  //Kai
 
               LastfmClient.failedToScrobble.add("Track: " + playbackItem.getTrack().track());*/
               String msg = track.track() + track.artist() + "// REASON: Track not found, cannot scrobble."; //Kai
-              if(!track.track().equals("") && !track.artist().equals("") && !LastfmClient.failedToScrobble.contains(msg)){  //Kai
+              if(!(track.track().equals("") && track.artist().equals("")) && !LastfmClient.failedToScrobble.contains(msg)){  //Kai
                 LastfmClient.failedToScrobble.add(msg);  //Kai
               }
             } else {

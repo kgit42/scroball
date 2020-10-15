@@ -646,6 +646,7 @@ public class LastfmClient {
     protected void onPostExecute(Track updatedTrack) {
       Message message = Message.obtain();
       loglog.add("UPDATED TRACK: " + updatedTrack); //Kai
+      //loglog.add("Failedtoscrobble has " + LastfmClient.failedToScrobble.size() + " entries.");  //Kai
 
       if (updatedTrack != null) {
         com.appmut.scroball.Track.Builder builder =
