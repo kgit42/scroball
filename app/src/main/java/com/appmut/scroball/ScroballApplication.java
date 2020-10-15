@@ -3,6 +3,7 @@ package com.appmut.scroball;
 import android.app.Application;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Environment;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
 
@@ -11,6 +12,8 @@ import com.google.common.eventbus.Subscribe;
 import com.appmut.scroball.db.ScroballDB;
 import com.raizlabs.android.dbflow.config.FlowManager;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Locale;
 
 import com.softartdev.lastfm.Caller;
@@ -25,9 +28,64 @@ public class ScroballApplication extends Application {
   private ScroballDB scroballDB;
   private SharedPreferences sharedPreferences;
 
+
+  /* Checks if external storage is available for read and write */    //Kai
+  public boolean isExternalStorageWritable() {
+    String state = Environment.getExternalStorageState();
+    if ( Environment.MEDIA_MOUNTED.equals( state ) ) {
+      return true;
+    }
+    return false;
+  }
+
+  /* Checks if external storage is available to at least read */    //Kai
+  public boolean isExternalStorageReadable() {
+    String state = Environment.getExternalStorageState();
+    if ( Environment.MEDIA_MOUNTED.equals( state ) ||
+            Environment.MEDIA_MOUNTED_READ_ONLY.equals( state ) ) {
+      return true;
+    }
+    return false;
+  }
+
   @Override
   public void onCreate() {
     super.onCreate();
+    LastfmClient.loglog.add("onCreate");    //Kai
+
+    if ( isExternalStorageWritable() ) {    //Kai von hier
+      LastfmClient.loglog.add("ExternalStorage is Writable");  //Kai
+
+      File appDirectory = new File( Environment.getExternalStorageDirectory() + "/MyPersonalAppFolder" );
+      File mediaStorageDir = new File(getExternalFilesDir(null) + "/MyAppFolder");  //Kai
+      LastfmClient.loglog.add(mediaStorageDir.getPath());
+      File logDirectory = new File( mediaStorageDir + "/logs" );
+      File logFile = new File( logDirectory, "logcat_" + System.currentTimeMillis() + ".txt" );
+
+      // create app folder
+      if ( !mediaStorageDir.exists() ) {
+        LastfmClient.loglog.add(Boolean.toString(mediaStorageDir.mkdir()));
+      }
+
+      // create log folder
+      if ( !logDirectory.exists() ) {
+        logDirectory.mkdir();
+      }
+
+      // clear the previous logcat and then write the new one to the file
+      try {
+        Process process = Runtime.getRuntime().exec("logcat -c");
+        process = Runtime.getRuntime().exec("logcat -f " + logFile);
+      } catch ( IOException e ) {
+        e.printStackTrace();
+      }
+
+    } else if ( isExternalStorageReadable() ) {
+      // only readable
+    } else {
+      // not accessible
+    }                       // Kai bis hier
+
     //Fabric.with(this, new Crashlytics());
     FlowManager.init(this);
     //MobileAds.initialize(this, "ca-app-pub-9985743520520066~4279780475");
