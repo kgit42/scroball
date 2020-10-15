@@ -63,8 +63,8 @@ public class LastfmClient {
                   ERROR_RATE_LIMIT_EXCEEDED);   //Kai
 
   private static final String TAG = LastfmClient.class.getName();
-  private static final String API_KEY = "17f6f4f55152871370780cd9c0761509";
-  private static final String API_SECRET = "99eafa4c2412543f3141505121184b8a";
+  private static final String API_KEY = "91825f9f2cbf27d264d46c6cf3564ed9";  //"17f6f4f55152871370780cd9c0761509"; alter API Key
+  private static final String API_SECRET = "c8a68bb8277f7cac9d1bc387ab19269b"; //"99eafa4c2412543f3141505121184b8a";
 
 
   private final LastfmApi api;
