@@ -6,6 +6,7 @@ import android.media.session.PlaybackState;
 import android.os.PowerManager;
 import android.util.Log;
 
+import com.appmut.scroball.db.ScroballDB;
 import com.appmut.scroball.transforms.MetadataTransformers;
 
 import org.json.JSONObject;
@@ -35,15 +36,18 @@ public class PlaybackTracker {
     public static boolean pollingTaskRunning = false; //Kai
 
     public PowerManager.WakeLock wakeLock; //Kai
+    public ScroballDB scroballDB;   //Kai
+
     //public static String lastMetaDataTitle = "";  //Kai
     public static String activePlayer = "";
 
 
     public PlaybackTracker(
-            ScrobbleNotificationManager scrobbleNotificationManager, Scrobbler scrobbler, PowerManager.WakeLock wakeLock) {
+            ScrobbleNotificationManager scrobbleNotificationManager, Scrobbler scrobbler, PowerManager.WakeLock wakeLock, ScroballDB scroballDB) {
         this.scrobbleNotificationManager = scrobbleNotificationManager;
         this.scrobbler = scrobbler;
         this.wakeLock = wakeLock;
+        this.scroballDB = scroballDB;
     }
 
     public void handlePlaybackStateChange(String player, PlaybackState playbackState) {
@@ -58,13 +62,15 @@ public class PlaybackTracker {
 
     public void handleMetadataChange(String player, MediaMetadata metadata) {
         Log.v("WICHTIG!", "Metadata Change: " + player + metadata);
-        PlayerState playerState = getOrCreatePlayerState(player);   //Kai
 
-        playerState.setLastMetadataTitle(metadata.getString(MediaMetadata.METADATA_KEY_TITLE));  //Kai
 
         if (metadata == null) {
             return;
         }
+
+        PlayerState playerState = getOrCreatePlayerState(player);   //Kai
+
+        playerState.setLastMetadataTitle(metadata.getString(MediaMetadata.METADATA_KEY_TITLE));  //Kai
 
 
         //Log.v("WICHTIG!", "Player: " + player); //Kai
@@ -119,7 +125,7 @@ public class PlaybackTracker {
                 }
             }
 
-            track = metadataTransformers.transformForPackageName(player, Track.fromMediaMetadata(metadata));
+            track = metadataTransformers.transformForPackageName(player, Track.fromMediaMetadata(metadata, scroballDB));
 
 /*
       if(track.track().equals("553534435")){  //Kai

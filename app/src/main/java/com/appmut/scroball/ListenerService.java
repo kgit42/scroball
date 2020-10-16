@@ -61,8 +61,7 @@ public class ListenerService extends NotificationListenerService
     powerManager = (PowerManager) getSystemService(POWER_SERVICE); //Kai
     wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MyApp::MyWakelockTag");  //Kai
 
-    playbackTracker = new PlaybackTracker(scrobbleNotificationManager, scrobbler, wakeLock);
-
+    playbackTracker = new PlaybackTracker(scrobbleNotificationManager, scrobbler, wakeLock, scroballDB);
 
 
     Log.d(TAG, "NotificationListenerService started");

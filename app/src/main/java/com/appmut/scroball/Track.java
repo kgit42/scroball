@@ -7,6 +7,7 @@ import android.webkit.WebView;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.appmut.scroball.db.ScroballDB;
 import com.google.auto.value.AutoValue;
 import com.google.common.base.Optional;
 import com.appmut.scroball.transforms.TitleExtractor;
@@ -44,7 +45,7 @@ public abstract class Track implements Serializable {
     return !track().equals("") && !artist().equals("");
   }
 
-  public static Track fromMediaMetadata(MediaMetadata metadata) {
+  public static Track fromMediaMetadata(MediaMetadata metadata, ScroballDB scroballdb) {
     String title = metadata.getString(MediaMetadata.METADATA_KEY_TITLE);
     String artist = metadata.getString(MediaMetadata.METADATA_KEY_ARTIST);
     String composer = metadata.getString(MediaMetadata.METADATA_KEY_COMPOSER);
@@ -119,7 +120,7 @@ public abstract class Track implements Serializable {
     }
     if (artist != null) {
       if(title.equals("Radio Bonn/Rhein-Sieg") ||  title.equals("WDR 3") || title.equals("WDR 4") || title.equals("WDR 5") || title.equals("SWR1 Rheinland-Pfalz") || title.equals("SWR2 Kulturradio") || title.equals("SWR4 Rheinland Pfalz")){   //Kai
-        return new TitleExtractor().transformByArtist(builder.track("").artist(artist).build(), false);
+        return new TitleExtractor(scroballdb).transformByArtist(builder.track("").artist(artist).build(), false);
       /*}else if(title.equals("1LIVE")){
         return new TitleExtractor().transformByArtist(builder.track("").artist(artist).build(), true);*/
       }
@@ -128,7 +129,7 @@ public abstract class Track implements Serializable {
       // Some apps (Telegram) set ALBUM_ARTIST but not ARTIST.
       builder.artist(albumArtist);
     } else {
-      return new TitleExtractor().transform(builder.artist("").build());
+      return new TitleExtractor(scroballdb).transform(builder.artist("").build());
     }
     if (composer != null) {
       builder.composer(composer);

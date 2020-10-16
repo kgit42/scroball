@@ -78,6 +78,7 @@ public class Scrobbler {
   }
 
   public void submit(PlaybackItem playbackItem, boolean skipFetchingTrackDuration) {
+
     //Log.v("WICHTIG", "submit function: " + playbackItem.toString());
     //Log.v("WICHTIG", "lastplaybackitem: " + lastPlaybackItem);
    /* if(lastPlaybackItem != null) {
@@ -161,7 +162,7 @@ Log.v("Wichtig", "newScrobbles: " + newScrobbles);  //Kai
       Scrobble scrobble = Scrobble.builder().track(track).timestamp(itemTimestamp).build();
 
       pending.add(scrobble);
-      scroballDB.writeScrobble(scrobble);
+      // scroballDB.writeScrobble(scrobble);  //Kai: auskommentiert
       playbackItem.addScrobble();
     }
 
@@ -217,8 +218,12 @@ Log.v("Wichtig", "newScrobbles: " + newScrobbles);  //Kai
 
               LastfmClient.failedToScrobble.add("Track: " + playbackItem.getTrack().track());*/
               String msg = track.track() + track.artist() + "// REASON: Track not found, cannot scrobble."; //Kai
-              if(!(track.track().equals("") && track.artist().equals("")) && !LastfmClient.failedToScrobble.contains(msg)){  //Kai
-                LastfmClient.failedToScrobble.add(msg);  //Kai
+              if(!(track.track().equals("") && track.artist().equals(""))){  //Kai
+                if(!LastfmClient.failedToScrobble.contains(msg)){
+                  LastfmClient.failedToScrobble.add(msg);  //Kai
+                }
+                Scrobble scrobble = Scrobble.builder().track(track).timestamp((int) (System.currentTimeMillis() / 1000)).build(); //Kai: in permanenter DB speichern
+                scroballDB.writeScrobble(scrobble);
               }
             } else {
               if (LastfmClient.isTransientError(errorCode)) {
@@ -332,7 +337,7 @@ Log.v("Wichtig", "newScrobbles: " + newScrobbles);  //Kai
                   if (result.isSuccessful()) {
 
                     scrobble.status().setScrobbled(true);
-                    scroballDB.writeScrobble(scrobble);
+                    //scroballDB.writeScrobble(scrobble); //Kai: auskommentiert
                     pending.remove(scrobble);
 
                   } else {
@@ -349,7 +354,7 @@ Log.v("Wichtig", "newScrobbles: " + newScrobbles);  //Kai
 
 
                     scrobble.status().setErrorCode(errorCode);
-                    scroballDB.writeScrobble(scrobble);
+                    // scroballDB.writeScrobble(scrobble);  //Kai: auskommentiert
                   }
                 }
 
@@ -480,7 +485,7 @@ Log.v("Wichtig", "newScrobbles: " + newScrobbles);  //Kai
   private void queuePendingPlaybackItem(PlaybackItem playbackItem) {
     //if(!pendingPlaybackItems.contains(playbackItem)){ //Kai
       pendingPlaybackItems.add(playbackItem);
-      scroballDB.writePendingPlaybackItem(playbackItem);
+      // scroballDB.writePendingPlaybackItem(playbackItem); //Kai: auskommentiert
     //}
 
   }

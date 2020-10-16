@@ -1,5 +1,6 @@
 package com.appmut.scroball.transforms;
 
+import com.appmut.scroball.db.ScroballDB;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMultimap;
 import com.appmut.scroball.Track;
@@ -10,7 +11,8 @@ import java.util.List;
 public class MetadataTransformers {
 
   private static final MetadataTransform VIDEO_TITLE_CLEANER = new VideoTitleCleaner();
-  private static final MetadataTransform TITLE_EXTRACTOR = new TitleExtractor();
+  private static final MetadataTransform TITLE_EXTRACTOR = new TitleExtractor(null);
+
 
   private static final List<MetadataTransform> VIDEO_TRANSFORMS =
       ImmutableList.of(TITLE_EXTRACTOR, VIDEO_TITLE_CLEANER);
