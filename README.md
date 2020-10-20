@@ -1,4 +1,4 @@
-# Scroball optimized for german radio apps
+# Scroball fork optimized for german radio apps
 - Radioplayer (local radio programs, WDR3, WDR4, WDR5)
 - SWR1, SWR2, SWR3, SWR4, DASDING
 - Replaio Radio (especially 1LIVE with Metadata parsing, WDR2)
