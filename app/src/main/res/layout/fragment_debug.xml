@@ -63,13 +63,31 @@
         android:layout_gravity="center_vertical"
         android:text=" -1" />
 
-
-    <Button
+    <TableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Update"
-        android:onClick="updateLogButton">
-    </Button>
+        android:stretchColumns="*">
+
+        <TableRow>
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Clear"
+                android:onClick="clearLogButton">
+            </Button>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_column="1"
+                android:layout_height="wrap_content"
+                android:text="Update"
+                android:onClick="updateLogButton">
+            </Button>
+        </TableRow>
+
+
+    </TableLayout>
+
 
 
     <TextView

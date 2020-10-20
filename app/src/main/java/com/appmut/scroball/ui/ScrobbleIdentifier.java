@@ -37,7 +37,7 @@ public class ScrobbleIdentifier {       //Kai
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(Object o) {       //Kai
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ScrobbleIdentifier that = (ScrobbleIdentifier) o;

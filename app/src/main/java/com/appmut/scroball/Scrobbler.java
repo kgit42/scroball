@@ -222,8 +222,12 @@ Log.v("Wichtig", "newScrobbles: " + newScrobbles);  //Kai
                 if(!LastfmClient.failedToScrobble.contains(msg)){
                   LastfmClient.failedToScrobble.add(msg);  //Kai
                 }
-                Scrobble scrobble = Scrobble.builder().track(track).timestamp((int) (System.currentTimeMillis() / 1000)).build(); //Kai: in permanenter DB speichern
-                scroballDB.writeScrobble(scrobble);
+
+                if(!track.track().equals("") && !track.artist().equals("")){  //Kai
+                  Scrobble scrobble = Scrobble.builder().track(track).timestamp((int) (System.currentTimeMillis() / 1000)).build(); //Kai: in permanenter DB speichern
+                  scroballDB.writeScrobble(scrobble);
+                }
+
               }
             } else {
               if (LastfmClient.isTransientError(errorCode)) {

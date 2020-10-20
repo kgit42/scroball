@@ -178,25 +178,6 @@ public class ScroballDB {
         != null;
   }
 
-  /** Prunes old submitted {@link Scrobble}s from the database, limiting to {@code MAX_ROWS}. */
-  public void prune() {
-    long rowCount =
-        SQLite.selectCountOf()
-            .from(ScrobbleLogEntry.class)
-            .where(ScrobbleLogEntry_Table.status.lessThan(0))
-            .count();
-    long toRemove = MAX_ROWS - rowCount;
-
-    if (toRemove > 0) {
-      SQLite.delete(ScrobbleLogEntry_Table.class)
-          .where(ScrobbleLogEntry_Table.status.lessThan(0))
-          .orderBy(ScrobbleLogEntry_Table.id, true)
-          .limit((int) toRemove)
-          .async()
-          .execute();
-    }
-  }
-
   /** Clears all {@link Scrobble} and {@link PlaybackItem}s from the database. */
   public void clear() {
     Delete.tables(ScrobbleLogEntry.class, PendingPlaybackItemEntry.class);

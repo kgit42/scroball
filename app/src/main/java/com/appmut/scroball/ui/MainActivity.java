@@ -237,6 +237,12 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
 
       //Toast.makeText(getApplicationContext(), Integer.toString(LastfmClient.getLastScrobbledTracks().length()), Toast.LENGTH_LONG).show();
     }
+
+  public void clearLogButton(View view) {  //Kai
+
+  LastfmClient.clearAllLists();
+  }
+
 /*
     public void showDialog1(View view) {
     showDialog(0, null);

@@ -293,6 +293,13 @@ public class LastfmClient {
     return s;
   }
 
+  public static void clearAllLists(){ //Kai
+    lastScrobbledTracks.clear();
+    lastXScrobbledTracks.clear();
+    loglog.clear();
+    failedToScrobble.clear();
+  }
+
   public void getTrackInfo(com.appmut.scroball.Track track, Handler.Callback callback) {
     if(Math.abs(System.currentTimeMillis() - cooldownStart) < cooldown){    //Kai
       return;
@@ -554,7 +561,7 @@ public class LastfmClient {
               }else{
                 ScrobbleIdentifier scrobbleIdentifier = new ScrobbleIdentifier(result.getTrack(), result.getArtist(), result.getTimestamp());
                 //String scrobbleString = result.getTrack() + result.getArtist() + result.getTimestamp(); //Kai
-                if((!scrobbleIdentifier.getTrack().equals("null") || !scrobbleIdentifier.getArtist().equals("null")) && (!scrobbleIdentifier.getTrack().equals("\"") && !scrobbleIdentifier.getArtist().equals("\""))){ //&& !lastScrobbledTracks.contains(trackAndArtist)){  //Kai
+                if((!scrobbleIdentifier.getTrack().equals("null") && !scrobbleIdentifier.getArtist().equals("null")) && (!scrobbleIdentifier.getTrack().equals("\"") && !scrobbleIdentifier.getArtist().equals("\"")) && !(scrobbleIdentifier.getTrack().equals("") || scrobbleIdentifier.getTrack().equals(""))){ //&& !lastScrobbledTracks.contains(trackAndArtist)){  //Kai
                   lastScrobbledTracks.add(new ScrobbleIdentifier(result.getTrack(), result.getArtist(), result.getTimestamp()));  //Kai
                   lastXScrobbledTracks.add(result.getTrack() + result.getArtist()); //KAI
                 }
