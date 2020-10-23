@@ -294,7 +294,7 @@ public class LastfmClient {
   }
 
   public static void clearAllLists(){ //Kai
-    lastScrobbledTracks.clear();
+    //lastScrobbledTracks.clear();
     lastXScrobbledTracks.clear();
     loglog.clear();
     failedToScrobble.clear();
