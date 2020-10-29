@@ -53,7 +53,7 @@ public class ScroballApplication extends Application {
     super.onCreate();
     LastfmClient.loglog.add("onCreate");    //Kai
 
-    /*
+    /* ..........
 
     if ( isExternalStorageWritable() ) {    //Kai von hier
       LastfmClient.loglog.add("ExternalStorage is Writable");  //Kai
@@ -86,7 +86,7 @@ public class ScroballApplication extends Application {
       // only readable
     } else {
       // not accessible
-    }                       // Kai bis hier*/
+    }                       // Kai bis hier  ......... */
 
     //Fabric.with(this, new Crashlytics());
     FlowManager.init(this);
