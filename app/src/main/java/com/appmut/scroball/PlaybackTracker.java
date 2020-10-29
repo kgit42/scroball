@@ -64,7 +64,7 @@ public class PlaybackTracker {
         Log.v("WICHTIG!", "Metadata Change: " + player + metadata);
 
 
-        if (metadata == null) {
+        if (metadata == null || metadata.getString(MediaMetadata.METADATA_KEY_TITLE) == null) { //Kai
             return;
         }
 
@@ -83,12 +83,10 @@ public class PlaybackTracker {
 
             //Kai: WDR2 zeigt manchmal im Wechsel zu den Metadaten des Songs Fußballergebnisse an... Daher hiermit rausfiltern:
             Pattern p = Pattern.compile("(.)* [0-9]:[0-9]");
-            if(title != null){
-                Matcher m = p.matcher(title);
-                if (m.matches()) {
-                    LastfmClient.loglog.add("A football score scrobble was avoided: " + title);
-                    return;
-                }
+            Matcher m = p.matcher(title);
+            if (m.matches()) {
+                LastfmClient.loglog.add("A football score scrobble was avoided: " + title);
+                return;
             }
 
         }
