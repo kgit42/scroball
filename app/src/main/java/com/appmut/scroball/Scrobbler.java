@@ -263,7 +263,8 @@ Log.v("Wichtig", "newScrobbles: " + newScrobbles);  //Kai
     boolean backoff = lastScrobbleTime + nextScrobbleDelay > System.currentTimeMillis();
 
     if(LastfmClient.isScrobbleTaskBlocked){  //Kai
-      return;
+      //return;
+      LastfmClient.loglog.add("ScrobbleTask is blocked.");  //Kai
     }
 
     if (!isConnected || !client.isAuthenticated() || backoff) {
