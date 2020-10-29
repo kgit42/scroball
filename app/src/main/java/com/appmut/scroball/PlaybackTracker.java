@@ -281,6 +281,7 @@ public class PlaybackTracker {
 
                     } catch (Exception e) {
                         Log.v("WICHTIG!", ">>>> Exception beim Abrufen der 1LIVE Playlist: " + e.getMessage());
+                        LastfmClient.loglog.add(">>>> Exception beim Abrufen der 1LIVE Playlist: " + e.getMessage());   //Kai
                     }
                 }
             }, 0, 20, TimeUnit.SECONDS);

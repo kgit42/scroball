@@ -140,11 +140,13 @@ public class PlayerState {
 
     if (track.isSameTrack(currentTrack)) {
       Log.d(TAG, String.format("Track metadata updated: %s", track));
+      //LastfmClient.loglog.add(("PlayerState: Track metadata updated: " + track)); //Kai
 
       // Update track in PlaybackItem, as this new one probably has updated details/more keys.
       playbackItem.setTrack(track);
     } else {
       Log.d(TAG, String.format("Changed track: %s", track));
+      LastfmClient.loglog.add(("PlayerState: Changed track: " + track));  //Kai
 
       if (playbackItem != null) {
         playbackItem.stopPlaying();
