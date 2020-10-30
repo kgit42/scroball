@@ -272,6 +272,7 @@ public class PlaybackTracker {
                                 lastMetadataChangePermitted = System.currentTimeMillis(); //Kai
                                 playerState = getOrCreatePlayerState(player);
                                 playerState.setTrack(track);
+                                //Achtung: funtioniert. Aber nur weil nicht innerhalb des Intervalls des Pollings die Metadaten upgedated werden. Denn dann würde setTrack den Track wieder zurück ändern und es würden nie die nötige Zeit zum Scrobbeln erreicht werden
                             }
                         } else {
                             lastMetadataChangePermitted = System.currentTimeMillis(); //Kai
